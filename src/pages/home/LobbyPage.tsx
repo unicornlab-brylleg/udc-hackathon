@@ -12,17 +12,17 @@ import CallingService, {
 
 type LobbyPageProps = {
   user: User;
+  callManager: CallManager;
 };
 
-const LobbyPage = ({ user }: LobbyPageProps) => {
+const LobbyPage = ({ user, callManager }: LobbyPageProps) => {
   // States
   const [groupCallID, setGroupCallID] = useState("");
   const [fieldErrorMessage, setfieldErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [callManager, setCallManager] = useState<CallManager | null>(null);
-  const [deviceOptions, setDeviceOptions] = useState<DeviceOptions | null>(
-    null
-  );
+  // const [deviceOptions, setDeviceOptions] = useState<DeviceOptions | null>(
+  //   null
+  // );
 
   // Services
   const callingService = new CallingService();
@@ -32,20 +32,13 @@ const LobbyPage = ({ user }: LobbyPageProps) => {
     // Field validation
     if (groupCallID && groupCallID.trim() !== "") {
       setIsLoading(true);
-      // Setup call manager
-      const callManager = await callingService.createAndSetupCallManager(
-        user.token,
-        `${user.firstName} ${user.lastName}`
-        // updateCall
-      );
-      setCallManager(callManager);
       // Get call options
       const deviceManager = await callManager.callClient.getDeviceManager();
       const [callOptions, deviceOptions] = await callingService.getCallOptions(
         true,
         deviceManager
       );
-      setDeviceOptions(deviceOptions);
+      // setDeviceOptions(deviceOptions);
       // Join group call
       callManager.callAgent.join({ groupId: groupCallID }, callOptions);
       setIsLoading(false);
