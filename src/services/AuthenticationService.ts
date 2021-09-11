@@ -16,23 +16,28 @@ class AuthenticationService {
 
   // Create user
   async createUser(firstName: string, lastName: string): Promise<User> {
-    console.log(`Creating user account for ${firstName} ${lastName}...`);
-    const user = await this.communicationIdentityClient.createUserAndToken([
-      "voip",
-    ]);
-    console.log(
-      `Created new credentials ${JSON.stringify(
-        user,
-        null,
-        2
-      )} for ${firstName} ${lastName}!`
-    );
-    return {
-      firstName: firstName,
-      lastName: lastName,
-      id: user.user.communicationUserId,
-      token: user.token,
-    };
+    try {
+      console.log(`Creating user account for ${firstName} ${lastName}...`);
+      const user = await this.communicationIdentityClient.createUserAndToken([
+        "voip",
+      ]);
+      console.log(
+        `Created new credentials ${JSON.stringify(
+          user,
+          null,
+          2
+        )} for ${firstName} ${lastName}!`
+      );
+      return {
+        firstName: firstName,
+        lastName: lastName,
+        id: user.user.communicationUserId,
+        token: user.token,
+      };
+    } catch (error) {
+      console.error(`Error creating user account due to ${error}!`);
+      throw Error("Error creating user!");
+    }
   }
 }
 

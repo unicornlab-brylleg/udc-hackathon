@@ -18,13 +18,20 @@ const Authentication = ({ setUser }: AuthenticationProps) => {
   const [lastName, setLastName] = useState("");
   const [fieldErrorMessage, setfieldErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [authErrorMessage, setAuthErrorMessage] = useState("");
 
   // Services
   const authenticationService = new AuthenticationService();
 
   // Methods
   async function createUser() {
-    if (firstName && lastName) {
+    // Field validation
+    if (
+      firstName &&
+      firstName.trim() !== "" &&
+      lastName &&
+      lastName.trim() !== ""
+    ) {
       setIsLoading(true);
       setfieldErrorMessage("");
       const user = await authenticationService.createUser(firstName, lastName);
