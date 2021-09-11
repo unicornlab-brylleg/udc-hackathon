@@ -14,8 +14,8 @@ declare global {
 }
 
 type CallManager = {
+  callClient: CallClient;
   callAgent: CallAgent;
-  deviceManager: DeviceManager;
 };
 
 type CallOptions = {
@@ -59,53 +59,35 @@ class CallingService {
         displayName: userDisplayName,
       });
       window.callAgent = callAgent;
-      // // Attach call listener
-      // callAgent.on("callsUpdated", (e) => {
-      //   console.log(`callsUpdated, added=${e.added}, removed=${e.removed}`);
-
-      //   e.added.forEach((call) => {
-      //     updatedCallState(call);
-      //     //   this.setState({ call: call });
-      //     //   const diagnosticChangedListener = (diagnosticInfo) => {
-      //     //     const rmsg = `UFD Diagnostic changed:
-      //     //         Diagnostic: ${diagnosticInfo.diagnostic}
-      //     //         Value: ${diagnosticInfo.value}
-      //     //         Value type: ${diagnosticInfo.valueType}
-      //     //         Media type: ${diagnosticInfo.mediaType}`;
-      //     //     if (this.state.ufdMessages.length > 0) {
-      //     //       this.setState({ ufdMessages: [...this.state.ufdMessages, rmsg] });
-      //     //     } else {
-      //     //       this.setState({ ufdMessages: [rmsg] });
-      //     //     }
-      //     //   };
-      //     //   call
-      //     //     .api(Features.Diagnostics)
-      //     //     .media.on("diagnosticChanged", diagnosticChangedListener);
-      //     //   call
-      //     //     .api(Features.Diagnostics)
-      //     //     .network.on("diagnosticChanged", diagnosticChangedListener);
-      //   });
-
-      //   e.removed.forEach((call) => {
-      //     console.log(
-      //       `callEndReason: ${call.callEndReason?.code} ${call.callEndReason?.subCode}`
-      //     );
-      //     updatedCallState(null);
-      //     //   if (this.state.call && this.state.call === call) {
-      //     //     this.displayCallEndReason(this.state.call.callEndReason);
-      //     //   }
-      //   });
-      // });
-      // Setup device manager and retrieve permissions
-      const deviceManager = await callClient.getDeviceManager();
-      console.log(`deviceManager: ${deviceManager.selectedSpeaker?.name}`);
-      await deviceManager.askDevicePermission({ audio: true, video: true });
       console.log("Call manager created and setup successfully!");
-      return { callAgent, deviceManager };
+      return { callClient, callAgent };
     } catch (error) {
       console.error(`Error setting up call manager!`);
       throw Error("Error setting up call manager!");
     }
+  }
+  // Attach call listeners
+  async attachCallListeners(callAgent: CallAgent, updateCallState: Function) {
+    // Attach call listener
+    callAgent.on("callsUpdated", (e) => {
+      console.log(`callsUpdated, added=${e.added}, removed=${e.removed}`);
+      e.added.forEach((call) => {
+        updateCallState(call);
+      });
+      e.removed.forEach((call) => {
+        console.log(
+          `callEndReason: ${call.callEndReason?.code} ${call.callEndReason?.subCode}`
+        );
+        updateCallState(null);
+      });
+    });
+  }
+  // Retrieve device permissions
+  async retrieveDevicePermissions(callClient: CallClient) {
+    // Setup device manager and retrieve permissions
+    const deviceManager = await callClient.getDeviceManager();
+    console.log(`deviceManager: ${deviceManager.selectedSpeaker?.name}`);
+    await deviceManager.askDevicePermission({ audio: true, video: true });
   }
   // Get call options
   async getCallOptions(

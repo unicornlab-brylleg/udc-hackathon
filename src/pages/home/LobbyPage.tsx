@@ -40,9 +40,10 @@ const LobbyPage = ({ user }: LobbyPageProps) => {
       );
       setCallManager(callManager);
       // Get call options
+      const deviceManager = await callManager.callClient.getDeviceManager();
       const [callOptions, deviceOptions] = await callingService.getCallOptions(
         true,
-        callManager.deviceManager
+        deviceManager
       );
       setDeviceOptions(deviceOptions);
       // Join group call

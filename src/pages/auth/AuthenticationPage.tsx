@@ -31,11 +31,19 @@ const AuthenticationPage = ({ setUser }: AuthenticationPageProps) => {
       lastName &&
       lastName.trim() !== ""
     ) {
-      setIsLoading(true);
-      setfieldErrorMessage("");
-      const user = await authenticationService.createUser(firstName, lastName);
-      setUser(user);
-      setIsLoading(false);
+      try {
+        setIsLoading(true);
+        setfieldErrorMessage("");
+        const user = await authenticationService.createUser(
+          firstName,
+          lastName
+        );
+        setUser(user);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
     } else setfieldErrorMessage("Please enter your full name!");
   }
 
