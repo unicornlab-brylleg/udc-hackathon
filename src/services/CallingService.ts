@@ -46,8 +46,8 @@ class CallingService {
   // Create call manager
   async createAndSetupCallManager(
     userToken: string,
-    userDisplayName: string,
-    updatedCallState: Function
+    userDisplayName: string
+    // updatedCallState: Function
   ): Promise<CallManager> {
     try {
       console.log("Creating and setting up call manager...");
@@ -59,43 +59,43 @@ class CallingService {
         displayName: userDisplayName,
       });
       window.callAgent = callAgent;
-      // Attach call listener
-      callAgent.on("callsUpdated", (e) => {
-        console.log(`callsUpdated, added=${e.added}, removed=${e.removed}`);
+      // // Attach call listener
+      // callAgent.on("callsUpdated", (e) => {
+      //   console.log(`callsUpdated, added=${e.added}, removed=${e.removed}`);
 
-        e.added.forEach((call) => {
-          updatedCallState(call);
-          //   this.setState({ call: call });
-          //   const diagnosticChangedListener = (diagnosticInfo) => {
-          //     const rmsg = `UFD Diagnostic changed:
-          //         Diagnostic: ${diagnosticInfo.diagnostic}
-          //         Value: ${diagnosticInfo.value}
-          //         Value type: ${diagnosticInfo.valueType}
-          //         Media type: ${diagnosticInfo.mediaType}`;
-          //     if (this.state.ufdMessages.length > 0) {
-          //       this.setState({ ufdMessages: [...this.state.ufdMessages, rmsg] });
-          //     } else {
-          //       this.setState({ ufdMessages: [rmsg] });
-          //     }
-          //   };
-          //   call
-          //     .api(Features.Diagnostics)
-          //     .media.on("diagnosticChanged", diagnosticChangedListener);
-          //   call
-          //     .api(Features.Diagnostics)
-          //     .network.on("diagnosticChanged", diagnosticChangedListener);
-        });
+      //   e.added.forEach((call) => {
+      //     updatedCallState(call);
+      //     //   this.setState({ call: call });
+      //     //   const diagnosticChangedListener = (diagnosticInfo) => {
+      //     //     const rmsg = `UFD Diagnostic changed:
+      //     //         Diagnostic: ${diagnosticInfo.diagnostic}
+      //     //         Value: ${diagnosticInfo.value}
+      //     //         Value type: ${diagnosticInfo.valueType}
+      //     //         Media type: ${diagnosticInfo.mediaType}`;
+      //     //     if (this.state.ufdMessages.length > 0) {
+      //     //       this.setState({ ufdMessages: [...this.state.ufdMessages, rmsg] });
+      //     //     } else {
+      //     //       this.setState({ ufdMessages: [rmsg] });
+      //     //     }
+      //     //   };
+      //     //   call
+      //     //     .api(Features.Diagnostics)
+      //     //     .media.on("diagnosticChanged", diagnosticChangedListener);
+      //     //   call
+      //     //     .api(Features.Diagnostics)
+      //     //     .network.on("diagnosticChanged", diagnosticChangedListener);
+      //   });
 
-        e.removed.forEach((call) => {
-          console.log(
-            `callEndReason: ${call.callEndReason?.code} ${call.callEndReason?.subCode}`
-          );
-          updatedCallState(null);
-          //   if (this.state.call && this.state.call === call) {
-          //     this.displayCallEndReason(this.state.call.callEndReason);
-          //   }
-        });
-      });
+      //   e.removed.forEach((call) => {
+      //     console.log(
+      //       `callEndReason: ${call.callEndReason?.code} ${call.callEndReason?.subCode}`
+      //     );
+      //     updatedCallState(null);
+      //     //   if (this.state.call && this.state.call === call) {
+      //     //     this.displayCallEndReason(this.state.call.callEndReason);
+      //     //   }
+      //   });
+      // });
       // Setup device manager and retrieve permissions
       const deviceManager = await callClient.getDeviceManager();
       console.log(`deviceManager: ${deviceManager.selectedSpeaker?.name}`);

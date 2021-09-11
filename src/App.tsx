@@ -1,15 +1,21 @@
 import React, { useState } from "react";
-import Authentication from "./pages/auth/Authentication";
-import Home from "./pages/home/Home";
+import AuthenticationPage from "./pages/auth/AuthenticationPage";
+import HomePage from "./pages/home/HomePage";
 import { User } from "./services/AuthenticationService";
 // import Home from "./pages/home/Home";
 
 function App() {
-  // Global App State
+  // App maintains the global User state
   const [user, setUser] = useState<User | null>(null);
 
   return (
-    <>{user ? <Home user={user} /> : <Authentication setUser={setUser} />}</>
+    <>
+      {user ? (
+        <HomePage user={user} />
+      ) : (
+        <AuthenticationPage setUser={setUser} />
+      )}
+    </>
   );
 }
 

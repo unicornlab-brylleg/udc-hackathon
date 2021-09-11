@@ -8,17 +8,16 @@ import AuthenticationService, {
   User,
 } from "../../services/AuthenticationService";
 
-type AuthenticationProps = {
+type AuthenticationPageProps = {
   setUser(user: User): void;
 };
 
-const Authentication = ({ setUser }: AuthenticationProps) => {
+const AuthenticationPage = ({ setUser }: AuthenticationPageProps) => {
   // States
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [fieldErrorMessage, setfieldErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [authErrorMessage, setAuthErrorMessage] = useState("");
 
   // Services
   const authenticationService = new AuthenticationService();
@@ -87,4 +86,4 @@ const Authentication = ({ setUser }: AuthenticationProps) => {
   );
 };
 
-export default Authentication;
+export default AuthenticationPage;

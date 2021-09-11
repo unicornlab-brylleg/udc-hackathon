@@ -9,17 +9,12 @@ import CallingService, {
   CallManager,
   DeviceOptions,
 } from "../../services/CallingService";
-import {
-  MessageBar,
-  MessageBarType,
-} from "@fluentui/react/lib/components/MessageBar";
-import CallCard from "./CallCard";
 
-type HomeProps = {
+type LobbyPageProps = {
   user: User;
 };
 
-const Home = ({ user }: HomeProps) => {
+const LobbyPage = ({ user }: LobbyPageProps) => {
   // States
   const [groupCallID, setGroupCallID] = useState("");
   const [fieldErrorMessage, setfieldErrorMessage] = useState("");
@@ -28,7 +23,6 @@ const Home = ({ user }: HomeProps) => {
   const [deviceOptions, setDeviceOptions] = useState<DeviceOptions | null>(
     null
   );
-  const [call, setCall] = useState(null);
 
   // Services
   const callingService = new CallingService();
@@ -41,8 +35,8 @@ const Home = ({ user }: HomeProps) => {
       // Setup call manager
       const callManager = await callingService.createAndSetupCallManager(
         user.token,
-        `${user.firstName} ${user.lastName}`,
-        setCall
+        `${user.firstName} ${user.lastName}`
+        // updateCall
       );
       setCallManager(callManager);
       // Get call options
@@ -94,32 +88,9 @@ const Home = ({ user }: HomeProps) => {
             <PrimaryButton onClick={joinGroupCall}>Join Call</PrimaryButton>
           )}
         </Stack>
-
-        {call && (
-          <CallCard
-            call={call}
-            deviceManager={callManager?.deviceManager}
-            selectedCameraDeviceId={deviceOptions?.selectedCameraDeviceId}
-            cameraDeviceOptions={deviceOptions?.cameraDeviceOptions}
-            speakerDeviceOptions={deviceOptions?.speakerDeviceOptions}
-            microphoneDeviceOptions={deviceOptions?.microphoneDeviceOptions}
-            onShowCameraNotFoundWarning={(show: unknown) => {
-              console.warn("Camera not found!");
-              // this.setState({ showCameraNotFoundWarning: show });
-            }}
-            onShowSpeakerNotFoundWarning={(show: unknown) => {
-              console.warn("Speaker not found!");
-              // this.setState({ showSpeakerNotFoundWarning: show });
-            }}
-            onShowMicrophoneNotFoundWarning={(show: unknown) => {
-              console.warn("Microphone not found!");
-              // this.setState({ showMicrophoneNotFoundWarning: show });
-            }}
-          />
-        )}
       </div>
     </div>
   );
 };
 
-export default Home;
+export default LobbyPage;
