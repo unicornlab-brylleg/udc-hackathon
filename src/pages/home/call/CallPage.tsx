@@ -12,6 +12,7 @@ import { Stack } from "office-ui-fabric-react/lib/components/Stack";
 import SidePane from "./side-pane/SidePane";
 import { cardStyle } from "../../shared/styles";
 import CallingService from "../../../services/CallingService";
+import ControlBar from "./control-bar/ControlBar";
 
 type CallPageProps = {
   call: Call;
@@ -27,6 +28,7 @@ const CallPage = ({ call, deviceManager, deviceOptions }: CallPageProps) => {
   const [remoteParticipantStreams, setRemoteParticipantStreams] = useState<
     RemoteVideoStream[]
   >([]);
+  const [selectedCameraID, setSelectedCameraID] = useState("");
 
   // Services
   const callingService = new CallingService();
@@ -84,36 +86,29 @@ const CallPage = ({ call, deviceManager, deviceOptions }: CallPageProps) => {
         }}
       >
         {/* Control Bar */}
-        <Stack.Item grow>
-          <div style={cardStyle}>
-            <Text variant="xLarge">Control Bar</Text>
-          </div>
-        </Stack.Item>
+        <ControlBar
+          call={call}
+          deviceManager={deviceManager}
+          selectedCameraID={selectedCameraID}
+          setSelectedCameraID={setSelectedCameraID}
+        />
         {/* Main Panel */}
-        <Stack.Item grow>
-          <Stack
-            tokens={{ childrenGap: 20 }}
-            style={{
-              alignItems: "center",
-              justifyItems: "center",
-              // padding: 16,
-            }}
-            horizontal
-          >
-            {/* Video Pane */}
-            <Stack.Item grow>
-              <div style={cardStyle}>
-                <Text variant="xLarge">Video Pane</Text>
-              </div>
-            </Stack.Item>
-            {/* Side Pane */}
-            <Stack.Item grow>
-              <div style={cardStyle}>
-                <SidePane call={call} remoteParticipants={remoteParticipants} />
-              </div>
-            </Stack.Item>
-          </Stack>
-        </Stack.Item>
+        <Stack
+          tokens={{ childrenGap: 20 }}
+          style={{
+            alignItems: "center",
+            justifyItems: "center",
+            // padding: 16,
+          }}
+          horizontal
+        >
+          {/* Video Pane */}
+          <div>
+            <Text variant="xLarge">Video Pane</Text>
+          </div>
+          {/* Side Pane */}
+          <SidePane call={call} remoteParticipants={remoteParticipants} />
+        </Stack>
       </Stack>
     </div>
   );

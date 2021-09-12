@@ -7,7 +7,7 @@ import { Spinner, SpinnerSize } from "@fluentui/react/lib/Spinner";
 import AuthenticationService, {
   User,
 } from "../../services/AuthenticationService";
-import { cardStyle } from "../shared/styles";
+import { mainCardStyle } from "../shared/styles";
 
 type AuthenticationPageProps = {
   setUser(user: User): void;
@@ -61,7 +61,7 @@ const AuthenticationPage = ({ setUser }: AuthenticationPageProps) => {
       }}
     >
       {/* Center Card */}
-      <div style={cardStyle}>
+      <div style={mainCardStyle}>
         <Stack
           tokens={{ childrenGap: 20 }}
           style={{ alignItems: "center", justifyItems: "center" }}

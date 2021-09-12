@@ -312,54 +312,6 @@ export default class CallCard extends React.Component {
     }
   }
 
-  async handleVideoOnOff() {
-    try {
-      const cameras = await this.deviceManager.getCameras();
-      const cameraDeviceInfo = cameras.find((cameraDeviceInfo) => {
-        return cameraDeviceInfo.id === this.state.selectedCameraDeviceId;
-      });
-      let selectedCameraDeviceId = this.state.selectedCameraDeviceId;
-      let localVideoStream;
-      if (this.state.selectedCameraDeviceId) {
-        localVideoStream = new LocalVideoStream(cameraDeviceInfo);
-      } else if (!this.state.videoOn) {
-        const cameras = await this.deviceManager.getCameras();
-        selectedCameraDeviceId = cameras[0].id;
-        localVideoStream = new LocalVideoStream(cameras[0]);
-      }
-
-      if (
-        this.call.state === "None" ||
-        this.call.state === "Connecting" ||
-        this.call.state === "Incoming"
-      ) {
-        if (this.state.videoOn) {
-          this.setState({ videoOn: false });
-        } else {
-          this.setState({ videoOn: true, selectedCameraDeviceId });
-        }
-        await this.watchForCallFinishConnecting();
-        if (this.state.videoOn) {
-          this.call.startVideo(localVideoStream).catch((error) => {});
-        } else {
-          this.call
-            .stopVideo(this.call.localVideoStreams[0])
-            .catch((error) => {});
-        }
-      } else {
-        if (this.call.localVideoStreams[0]) {
-          await this.call.stopVideo(this.call.localVideoStreams[0]);
-        } else {
-          await this.call.startVideo(localVideoStream);
-        }
-      }
-
-      this.setState({ videoOn: this.call.localVideoStreams[0] ? true : false });
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
   async watchForCallFinishConnecting() {
     return new Promise((resolve) => {
       if (

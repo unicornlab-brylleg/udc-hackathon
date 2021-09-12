@@ -2,9 +2,8 @@ import React from "react";
 import { Text } from "@fluentui/react/lib/Text";
 import { Stack } from "@fluentui/react";
 import { Call, RemoteParticipant } from "@azure/communication-calling";
-import RemoteParticipantCard from "./RemoteParticipantCard";
-import { utils } from "../Utils";
 import ParticipantCard from "./ParticipantCard";
+import { cardStyle } from "../../../shared/styles";
 
 type SidePaneProps = {
   call: Call;
@@ -13,7 +12,7 @@ type SidePaneProps = {
 
 const SidePane = ({ call, remoteParticipants }: SidePaneProps) => {
   return (
-    <div>
+    <div style={cardStyle}>
       <Stack
         tokens={{ childrenGap: 20 }}
         style={{
@@ -21,7 +20,7 @@ const SidePane = ({ call, remoteParticipants }: SidePaneProps) => {
           justifyItems: "center",
         }}
       >
-        <Text variant="xLarge">Side Pane</Text>
+        <Text variant="xLarge">Participants</Text>
         {remoteParticipants.length === 0 && (
           <p className="text-center">
             No other participants currently in the call

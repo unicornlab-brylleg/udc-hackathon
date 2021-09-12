@@ -30,6 +30,7 @@ const ParticipantCard = ({ call, remoteParticipant }: ParticipantCardProps) => {
         setIsSpeaking(false);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Methods
@@ -53,11 +54,7 @@ const ParticipantCard = ({ call, remoteParticipant }: ParticipantCardProps) => {
         text={
           remoteParticipant.displayName ? remoteParticipant.displayName : id
         }
-        //   secondaryText={this.state.state}
-        //   styles={{
-        //     primaryText: { color: "#edebe9" },
-        //     secondaryText: { color: "#edebe9" },
-        //   }}
+        secondaryText={remoteParticipant.state}
       />
       {<Icon iconName={isMuted ? "MicOff" : "Microphone"} />}
       <IconButton
