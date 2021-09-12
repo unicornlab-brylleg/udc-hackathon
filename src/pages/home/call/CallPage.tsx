@@ -1,7 +1,7 @@
 import React from "react";
 import CallCard from "./CallCard";
 import { Call, DeviceManager } from "@azure/communication-calling";
-import { DeviceOptions } from "../../../services/CallingService";
+import { DeviceOptions } from "../../../services/DeviceService";
 
 type CallPageProps = {
   call: Call;

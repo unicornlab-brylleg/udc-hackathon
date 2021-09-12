@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { User } from "../../services/AuthenticationService";
-import CallingService, {
-  CallManager,
-  DeviceOptions,
-} from "../../services/CallingService";
+import CallingService, { CallManager } from "../../services/CallingService";
+import DeviceService, { DeviceOptions } from "../../services/DeviceService";
 import LoadingPage from "../shared/LoadingPage";
 import CallPage from "./call/CallPage";
 import LobbyPage from "./lobby/LobbyPage";
@@ -22,10 +20,11 @@ const HomePage = ({ user }: HomePageProps) => {
   ); // Manages devices and permissions; configured onMount
   const [deviceOptions, setDeviceOptions] = useState<DeviceOptions | null>(
     null
-  );
+  ); // Contains data on device options for a call; set by Lobby Page upon joining a call
 
   // Services
   const callingService = new CallingService();
+  const deviceService = new DeviceService();
 
   // Lifecycle
   useEffect(() => {
@@ -43,7 +42,7 @@ const HomePage = ({ user }: HomePageProps) => {
         setCall
       );
       // Retrieve device manager
-      const deviceManagerTemp = await callingService.retrieveDeviceManager(
+      const deviceManagerTemp = await deviceService.retrieveDeviceManager(
         callManagerTemp.callClient
       );
       setDeviceManager(deviceManagerTemp);

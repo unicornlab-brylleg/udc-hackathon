@@ -5,7 +5,8 @@ import { Stack } from "@fluentui/react/lib/components/Stack/Stack";
 import { TextField } from "@fluentui/react/lib/components/TextField/TextField";
 import { Spinner, SpinnerSize } from "@fluentui/react/lib/Spinner";
 import { PrimaryButton } from "@fluentui/react/lib/components/Button";
-import CallingService, { CallManager } from "../../../services/CallingService";
+import { CallManager } from "../../../services/CallingService";
+import DeviceService from "../../../services/DeviceService";
 
 type LobbyPageProps = {
   user: User;
@@ -20,7 +21,7 @@ const LobbyPage = ({ user, callManager, setDeviceOptions }: LobbyPageProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Services
-  const callingService = new CallingService();
+  const deviceService = new DeviceService();
 
   // Methods
   async function joinGroupCall() {
@@ -30,7 +31,7 @@ const LobbyPage = ({ user, callManager, setDeviceOptions }: LobbyPageProps) => {
       // Get call and device options options
       const deviceManager = await callManager.callClient.getDeviceManager();
       const [callOptions, deviceOptions] =
-        await callingService.getCallAndDeviceOptions(true, deviceManager);
+        await deviceService.getCallAndDeviceOptions(true, deviceManager);
       setDeviceOptions(deviceOptions);
       // setDeviceOptions(deviceOptions);
       // Join group call
