@@ -114,7 +114,10 @@ const CallPage = ({ call, deviceManager, deviceOptions }: CallPageProps) => {
           horizontal
         >
           {/* Video Pane */}
-          <VideoPane remoteParticipantStreams={remoteParticipantStreams} />
+          <VideoPane
+            call={call}
+            remoteParticipantStreams={remoteParticipantStreams}
+          />
           {/* Side Pane */}
           <SidePane call={call} remoteParticipants={remoteParticipants} />
         </Stack>

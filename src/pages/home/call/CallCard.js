@@ -41,133 +41,133 @@ export default class CallCard extends React.Component {
 
   async componentWillMount() {
     if (this.call) {
-      this.deviceManager.on("videoDevicesUpdated", async (e) => {
-        let newCameraDeviceToUse = undefined;
-        e.added.forEach((addedCameraDevice) => {
-          newCameraDeviceToUse = addedCameraDevice;
-          const addedCameraDeviceOption = {
-            key: addedCameraDevice.id,
-            text: addedCameraDevice.name,
-          };
-          this.setState((prevState) => ({
-            cameraDeviceOptions: [
-              ...prevState.cameraDeviceOptions,
-              addedCameraDeviceOption,
-            ],
-          }));
-        });
-        // When connectnig a new camera, ts device manager automatically switches to use this new camera and
-        // this.call.localVideoStream[0].source is never updated. Hence I have to do the following logic to update
-        // this.call.localVideoStream[0].source to the newly added camera. This is a bug. Under the covers, this.call.localVideoStreams[0].source
-        // should have been updated automatically by the sdk.
-        if (newCameraDeviceToUse) {
-          try {
-            await this.call.localVideoStreams[0]?.switchSource(
-              newCameraDeviceToUse
-            );
-            this.setState({ selectedCameraDeviceId: newCameraDeviceToUse.id });
-          } catch (error) {
-            console.error(
-              "Failed to switch to newly added video device",
-              error
-            );
-          }
-        }
+      // this.deviceManager.on("videoDevicesUpdated", async (e) => {
+      //   let newCameraDeviceToUse = undefined;
+      //   e.added.forEach((addedCameraDevice) => {
+      //     newCameraDeviceToUse = addedCameraDevice;
+      //     const addedCameraDeviceOption = {
+      //       key: addedCameraDevice.id,
+      //       text: addedCameraDevice.name,
+      //     };
+      //     this.setState((prevState) => ({
+      //       cameraDeviceOptions: [
+      //         ...prevState.cameraDeviceOptions,
+      //         addedCameraDeviceOption,
+      //       ],
+      //     }));
+      //   });
+      //   // When connectnig a new camera, ts device manager automatically switches to use this new camera and
+      //   // this.call.localVideoStream[0].source is never updated. Hence I have to do the following logic to update
+      //   // this.call.localVideoStream[0].source to the newly added camera. This is a bug. Under the covers, this.call.localVideoStreams[0].source
+      //   // should have been updated automatically by the sdk.
+      //   if (newCameraDeviceToUse) {
+      //     try {
+      //       await this.call.localVideoStreams[0]?.switchSource(
+      //         newCameraDeviceToUse
+      //       );
+      //       this.setState({ selectedCameraDeviceId: newCameraDeviceToUse.id });
+      //     } catch (error) {
+      //       console.error(
+      //         "Failed to switch to newly added video device",
+      //         error
+      //       );
+      //     }
+      //   }
 
-        e.removed.forEach((removedCameraDevice) => {
-          this.setState((prevState) => ({
-            cameraDeviceOptions: prevState.cameraDeviceOptions.filter(
-              (option) => {
-                return option.key !== removedCameraDevice.id;
-              }
-            ),
-          }));
-        });
+      //   e.removed.forEach((removedCameraDevice) => {
+      //     this.setState((prevState) => ({
+      //       cameraDeviceOptions: prevState.cameraDeviceOptions.filter(
+      //         (option) => {
+      //           return option.key !== removedCameraDevice.id;
+      //         }
+      //       ),
+      //     }));
+      //   });
 
-        // If the current camera being used is removed, pick a new random one
-        if (
-          !this.state.cameraDeviceOptions.find((option) => {
-            return option.key === this.state.selectedCameraDeviceId;
-          })
-        ) {
-          const newSelectedCameraId = this.state.cameraDeviceOptions[0]?.key;
-          const cameras = await this.deviceManager.getCameras();
-          const videoDeviceInfo = cameras.find((c) => {
-            return c.id === newSelectedCameraId;
-          });
-          await this.call.localVideoStreams[0]?.switchSource(videoDeviceInfo);
-          this.setState({ selectedCameraDeviceId: newSelectedCameraId });
-        }
-      });
+      //   // If the current camera being used is removed, pick a new random one
+      //   if (
+      //     !this.state.cameraDeviceOptions.find((option) => {
+      //       return option.key === this.state.selectedCameraDeviceId;
+      //     })
+      //   ) {
+      //     const newSelectedCameraId = this.state.cameraDeviceOptions[0]?.key;
+      //     const cameras = await this.deviceManager.getCameras();
+      //     const videoDeviceInfo = cameras.find((c) => {
+      //       return c.id === newSelectedCameraId;
+      //     });
+      //     await this.call.localVideoStreams[0]?.switchSource(videoDeviceInfo);
+      //     this.setState({ selectedCameraDeviceId: newSelectedCameraId });
+      //   }
+      // });
 
-      this.deviceManager.on("audioDevicesUpdated", (e) => {
-        e.added.forEach((addedAudioDevice) => {
-          const addedAudioDeviceOption = {
-            key: addedAudioDevice.id,
-            text: addedAudioDevice.name,
-          };
-          if (addedAudioDevice.deviceType === "Speaker") {
-            this.setState((prevState) => ({
-              speakerDeviceOptions: [
-                ...prevState.speakerDeviceOptions,
-                addedAudioDeviceOption,
-              ],
-            }));
-          } else if (addedAudioDevice.deviceType === "Microphone") {
-            this.setState((prevState) => ({
-              microphoneDeviceOptions: [
-                ...prevState.microphoneDeviceOptions,
-                addedAudioDeviceOption,
-              ],
-            }));
-          }
-        });
+      // this.deviceManager.on("audioDevicesUpdated", (e) => {
+      //   e.added.forEach((addedAudioDevice) => {
+      //     const addedAudioDeviceOption = {
+      //       key: addedAudioDevice.id,
+      //       text: addedAudioDevice.name,
+      //     };
+      //     if (addedAudioDevice.deviceType === "Speaker") {
+      //       this.setState((prevState) => ({
+      //         speakerDeviceOptions: [
+      //           ...prevState.speakerDeviceOptions,
+      //           addedAudioDeviceOption,
+      //         ],
+      //       }));
+      //     } else if (addedAudioDevice.deviceType === "Microphone") {
+      //       this.setState((prevState) => ({
+      //         microphoneDeviceOptions: [
+      //           ...prevState.microphoneDeviceOptions,
+      //           addedAudioDeviceOption,
+      //         ],
+      //       }));
+      //     }
+      //   });
 
-        e.removed.forEach((removedAudioDevice) => {
-          if (removedAudioDevice.deviceType === "Speaker") {
-            this.setState((prevState) => ({
-              speakerDeviceOptions: prevState.speakerDeviceOptions.filter(
-                (option) => {
-                  return option.key !== removedAudioDevice.id;
-                }
-              ),
-            }));
-          } else if (removedAudioDevice.deviceType === "Microphone") {
-            this.setState((prevState) => ({
-              microphoneDeviceOptions: prevState.microphoneDeviceOptions.filter(
-                (option) => {
-                  return option.key !== removedAudioDevice.id;
-                }
-              ),
-            }));
-          }
-        });
-      });
+      //   e.removed.forEach((removedAudioDevice) => {
+      //     if (removedAudioDevice.deviceType === "Speaker") {
+      //       this.setState((prevState) => ({
+      //         speakerDeviceOptions: prevState.speakerDeviceOptions.filter(
+      //           (option) => {
+      //             return option.key !== removedAudioDevice.id;
+      //           }
+      //         ),
+      //       }));
+      //     } else if (removedAudioDevice.deviceType === "Microphone") {
+      //       this.setState((prevState) => ({
+      //         microphoneDeviceOptions: prevState.microphoneDeviceOptions.filter(
+      //           (option) => {
+      //             return option.key !== removedAudioDevice.id;
+      //           }
+      //         ),
+      //       }));
+      //     }
+      //   });
+      // });
 
-      this.deviceManager.on("selectedSpeakerChanged", () => {
-        this.setState({
-          selectedSpeakerDeviceId: this.deviceManager.selectedSpeaker?.id,
-        });
-      });
+      // this.deviceManager.on("selectedSpeakerChanged", () => {
+      //   this.setState({
+      //     selectedSpeakerDeviceId: this.deviceManager.selectedSpeaker?.id,
+      //   });
+      // });
 
-      this.deviceManager.on("selectedMicrophoneChanged", () => {
-        this.setState({
-          selectedMicrophoneDeviceId: this.deviceManager.selectedMicrophone?.id,
-        });
-      });
+      // this.deviceManager.on("selectedMicrophoneChanged", () => {
+      //   this.setState({
+      //     selectedMicrophoneDeviceId: this.deviceManager.selectedMicrophone?.id,
+      //   });
+      // });
 
-      this.call.localVideoStreams.forEach((lvs) => {
-        this.setState({ videoOn: true });
-      });
+      // this.call.localVideoStreams.forEach((lvs) => {
+      //   this.setState({ videoOn: true });
+      // });
 
-      this.call.on("localVideoStreamsUpdated", (e) => {
-        e.added.forEach((lvs) => {
-          this.setState({ videoOn: true });
-        });
-        e.removed.forEach((lvs) => {
-          this.setState({ videoOn: false });
-        });
-      });
+      // this.call.on("localVideoStreamsUpdated", (e) => {
+      //   e.added.forEach((lvs) => {
+      //     this.setState({ videoOn: true });
+      //   });
+      //   e.removed.forEach((lvs) => {
+      //     this.setState({ videoOn: false });
+      //   });
+      // });
 
       // this.call.on("idChanged", () => {
       //   console.log("Call id Changed ", this.call.id);
