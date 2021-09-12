@@ -25,6 +25,7 @@ const ControlBar = ({
   // Local States
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
+  const [isSharingScreen, setIsSharingScreen] = useState(false);
 
   // Handle video on and off
   async function handleVideoOnOff() {
@@ -66,6 +67,25 @@ const ControlBar = ({
     }
   }
 
+  // Handle screen sharing on and off
+  async function handleScreenSharingOnOff() {
+    try {
+      if (call.isScreenSharingOn) {
+        await call.stopScreenSharing();
+      } else {
+        await call.startScreenSharing();
+      }
+      setIsSharingScreen(call.isScreenSharingOn);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // Handle drop call
+  async function dropCall() {
+    call.hangUp();
+  }
+
   return (
     <div style={cardStyle}>
       <Stack horizontal>
@@ -78,6 +98,16 @@ const ControlBar = ({
           iconProps={{ iconName: isMicOn ? "Microphone" : "MicOff" }}
           onClick={handleMicOnOff}
           style={{ color: "black" }}
+        />
+        <IconButton
+          iconProps={{ iconName: isSharingScreen ? "Cancel" : "ScreenCast" }}
+          onClick={handleScreenSharingOnOff}
+          style={{ color: "black" }}
+        />
+        <IconButton
+          iconProps={{ iconName: "DeclineCall" }}
+          onClick={dropCall}
+          style={{ color: "red" }}
         />
       </Stack>
     </div>

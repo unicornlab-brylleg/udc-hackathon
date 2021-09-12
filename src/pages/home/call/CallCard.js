@@ -340,19 +340,6 @@ export default class CallCard extends React.Component {
     }
   }
 
-  async handleScreenSharingOnOff() {
-    try {
-      if (this.call.isScreenSharingOn) {
-        await this.call.stopScreenSharing();
-      } else {
-        await this.call.startScreenSharing();
-      }
-      this.setState({ screenShareOn: this.call.isScreenSharingOn });
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
   async toggleDominantSpeakerMode() {
     try {
       if (this.state.dominantSpeakerMode) {
@@ -548,7 +535,7 @@ export default class CallCard extends React.Component {
                   {this.state.micMuted && <Icon iconName="MicOff2" />}
                   {!this.state.micMuted && <Icon iconName="Microphone" />}
                 </span> */}
-                <span
+                {/* <span
                   className="in-call-button"
                   title={`${
                     this.state.screenShareOn ? "Stop" : "Start"
@@ -558,8 +545,8 @@ export default class CallCard extends React.Component {
                 >
                   {!this.state.screenShareOn && <Icon iconName="TVMonitor" />}
                   {this.state.screenShareOn && <Icon iconName="CircleStop" />}
-                </span>
-                {(this.state.callState === "Connected" ||
+                </span> */}
+                {/* {(this.state.callState === "Connected" ||
                   this.state.callState === "LocalHold" ||
                   this.state.callState === "RemoteHold") && (
                   <span
@@ -578,7 +565,7 @@ export default class CallCard extends React.Component {
                       <Icon iconName="Play" />
                     )}
                   </span>
-                )}
+                )} */}
                 <span
                   className="in-call-button"
                   title="Settings"
