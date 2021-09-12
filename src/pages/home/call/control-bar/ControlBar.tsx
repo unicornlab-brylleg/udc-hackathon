@@ -24,6 +24,7 @@ const ControlBar = ({
 }: ControlBarProps) => {
   // Local States
   const [isVideoOn, setIsVideoOn] = useState(true);
+  const [isMicOn, setIsMicOn] = useState(true);
 
   // Handle video on and off
   async function handleVideoOnOff() {
@@ -51,12 +52,31 @@ const ControlBar = ({
     }
   }
 
+  // Handle mic on and off
+  async function handleMicOnOff() {
+    try {
+      if (!call.isMuted) {
+        await call.mute();
+      } else {
+        await call.unmute();
+      }
+      setIsMicOn(!call.isMuted);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   return (
     <div style={cardStyle}>
-      <Stack>
+      <Stack horizontal>
         <IconButton
           iconProps={{ iconName: isVideoOn ? "Video" : "VideoOff" }}
           onClick={handleVideoOnOff}
+          style={{ color: "black" }}
+        />
+        <IconButton
+          iconProps={{ iconName: isMicOn ? "Microphone" : "MicOff" }}
+          onClick={handleMicOnOff}
           style={{ color: "black" }}
         />
       </Stack>

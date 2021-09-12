@@ -328,19 +328,6 @@ export default class CallCard extends React.Component {
     });
   }
 
-  async handleMicOnOff() {
-    try {
-      if (!this.call.isMuted) {
-        await this.call.mute();
-      } else {
-        await this.call.unmute();
-      }
-      this.setState({ micMuted: this.call.isMuted });
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
   async handleHoldUnhold() {
     try {
       if (this.call.state === "LocalHold") {
@@ -541,7 +528,7 @@ export default class CallCard extends React.Component {
                 </div>
               )}
               <div className="text-center">
-                <span
+                {/* <span
                   className="in-call-button"
                   title={`Turn your video ${this.state.videoOn ? "off" : "on"}`}
                   variant="secondary"
@@ -549,8 +536,8 @@ export default class CallCard extends React.Component {
                 >
                   {this.state.videoOn && <Icon iconName="Video" />}
                   {!this.state.videoOn && <Icon iconName="VideoOff" />}
-                </span>
-                <span
+                </span> */}
+                {/* <span
                   className="in-call-button"
                   title={`${
                     this.state.micMuted ? "Unmute" : "Mute"
@@ -560,7 +547,7 @@ export default class CallCard extends React.Component {
                 >
                   {this.state.micMuted && <Icon iconName="MicOff2" />}
                   {!this.state.micMuted && <Icon iconName="Microphone" />}
-                </span>
+                </span> */}
                 <span
                   className="in-call-button"
                   title={`${
