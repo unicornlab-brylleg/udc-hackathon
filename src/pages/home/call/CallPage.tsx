@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
-import CallCard from "./CallCard";
 import {
   Call,
   DeviceManager,
   RemoteParticipant,
-  RemoteVideoStream,
 } from "@azure/communication-calling";
 import { DeviceOptions } from "../../../services/DeviceService";
-import { Text } from "@fluentui/react/lib/Text";
-import { Stack } from "office-ui-fabric-react/lib/components/Stack";
+import { Stack } from "@fluentui/react/lib/Stack";
 import SidePane from "./side-pane/SidePane";
-import { cardStyle } from "../../shared/styles";
-import CallingService from "../../../services/CallingService";
+import CallingService, {
+  ParticipantStream,
+} from "../../../services/CallingService";
 import ControlBar from "./control-bar/ControlBar";
+import VideoPane from "./video-pane/VideoPane";
 
 type CallPageProps = {
   call: Call;
@@ -26,7 +25,7 @@ const CallPage = ({ call, deviceManager, deviceOptions }: CallPageProps) => {
     RemoteParticipant[]
   >([]);
   const [remoteParticipantStreams, setRemoteParticipantStreams] = useState<
-    RemoteVideoStream[]
+    ParticipantStream[]
   >([]);
   const [selectedCameraID, setSelectedCameraID] = useState("");
 
@@ -35,6 +34,7 @@ const CallPage = ({ call, deviceManager, deviceOptions }: CallPageProps) => {
 
   // Lifecycle
   useEffect(() => {
+    // Attach needed listeners
     async function attachListeners() {
       await callingService.attachParticipantsListener(
         call,
@@ -45,6 +45,17 @@ const CallPage = ({ call, deviceManager, deviceOptions }: CallPageProps) => {
       );
     }
     attachListeners();
+    // Subscribe to remote participant streams
+    call.remoteParticipants.forEach((rp) =>
+      // this.subscribeToRemoteParticipant(rp)
+      callingService.subscribeToRemoteParticipant(
+        rp,
+        remoteParticipants,
+        setRemoteParticipants,
+        remoteParticipantStreams,
+        setRemoteParticipantStreams
+      )
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Or [] if effect doesn't need props or state
 
@@ -103,9 +114,7 @@ const CallPage = ({ call, deviceManager, deviceOptions }: CallPageProps) => {
           horizontal
         >
           {/* Video Pane */}
-          <div>
-            <Text variant="xLarge">Video Pane</Text>
-          </div>
+          <VideoPane remoteParticipantStreams={remoteParticipantStreams} />
           {/* Side Pane */}
           <SidePane call={call} remoteParticipants={remoteParticipants} />
         </Stack>

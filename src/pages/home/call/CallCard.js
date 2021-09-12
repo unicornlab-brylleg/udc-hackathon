@@ -1,19 +1,6 @@
 import React from "react";
-import {
-  MessageBar,
-  MessageBarType,
-  DefaultButton,
-} from "office-ui-fabric-react";
-import { Toggle } from "@fluentui/react/lib/Toggle";
-import { TooltipHost } from "@fluentui/react/lib/Tooltip";
-import StreamRenderer from "./StreamRenderer";
-import AddParticipantPopover from "./AddParticipantPopover";
-import RemoteParticipantCard from "./side-pane/RemoteParticipantCard";
-import { Panel, PanelType } from "office-ui-fabric-react/lib/Panel";
-import { Icon } from "@fluentui/react/lib/Icon";
 import LocalVideoPreviewCard from "./LocalVideoPreviewCard";
-import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
-import { LocalVideoStream, Features } from "@azure/communication-calling";
+import { Features } from "@azure/communication-calling";
 import { utils } from "./Utils";
 
 export default class CallCard extends React.Component {
@@ -169,37 +156,10 @@ export default class CallCard extends React.Component {
         });
       });
 
-      const callStateChanged = () => {
-        console.log("Call state changed ", this.call.state);
-        this.setState({ callState: this.call.state });
-
-        if (
-          this.call.state !== "None" &&
-          this.call.state !== "Connecting" &&
-          this.call.state !== "Incoming"
-        ) {
-          if (this.callFinishConnectingResolve) {
-            this.callFinishConnectingResolve();
-          }
-        }
-        // if (this.call.state === "Incoming") {
-        //   this.setState({ selectedCameraDeviceId: cameraDevices[0]?.id });
-        //   this.setState({ selectedSpeakerDeviceId: speakerDevices[0]?.id });
-        //   this.setState({
-        //     selectedMicrophoneDeviceId: microphoneDevices[0]?.id,
-        //   });
-        // }
-
-        if (this.call.state === "Disconnected") {
-          this.setState({ dominantRemoteParticipant: undefined });
-        }
-      };
-      callStateChanged();
-      this.call.on("stateChanged", callStateChanged);
-
       this.call.localVideoStreams.forEach((lvs) => {
         this.setState({ videoOn: true });
       });
+
       this.call.on("localVideoStreamsUpdated", (e) => {
         e.added.forEach((lvs) => {
           this.setState({ videoOn: true });
@@ -209,23 +169,19 @@ export default class CallCard extends React.Component {
         });
       });
 
-      this.call.on("idChanged", () => {
-        console.log("Call id Changed ", this.call.id);
-        this.setState({ callId: this.call.id });
-      });
+      // this.call.on("idChanged", () => {
+      //   console.log("Call id Changed ", this.call.id);
+      //   this.setState({ callId: this.call.id });
+      // });
 
-      this.call.on("isMutedChanged", () => {
-        console.log("Local microphone muted changed ", this.call.isMuted);
-        this.setState({ micMuted: this.call.isMuted });
-      });
+      // this.call.on("isMutedChanged", () => {
+      //   console.log("Local microphone muted changed ", this.call.isMuted);
+      //   this.setState({ micMuted: this.call.isMuted });
+      // });
 
-      this.call.on("isScreenSharingOnChanged", () => {
-        this.setState({ screenShareOn: this.call.isScreenShareOn });
-      });
-
-      this.call.remoteParticipants.forEach((rp) =>
-        this.subscribeToRemoteParticipant(rp)
-      );
+      // this.call.on("isScreenSharingOnChanged", () => {
+      //   this.setState({ screenShareOn: this.call.isScreenShareOn });
+      // });
 
       const dominantSpeakersChangedHandler = async () => {
         try {
@@ -306,37 +262,10 @@ export default class CallCard extends React.Component {
             ),
         });
       }
+
       this.call
         .api(Features.DominantSpeakers)
         .on("dominantSpeakersChanged", dominantSpeakersChangedHandler);
-    }
-  }
-
-  async watchForCallFinishConnecting() {
-    return new Promise((resolve) => {
-      if (
-        this.state.callState !== "None" &&
-        this.state.callState !== "Connecting" &&
-        this.state.callState !== "Incoming"
-      ) {
-        resolve();
-      } else {
-        this.callFinishConnectingResolve = resolve;
-      }
-    }).then(() => {
-      this.callFinishConnectingResolve = undefined;
-    });
-  }
-
-  async handleHoldUnhold() {
-    try {
-      if (this.call.state === "LocalHold") {
-        this.call.resume();
-      } else {
-        this.call.hold();
-      }
-    } catch (e) {
-      console.error(e);
     }
   }
 
@@ -390,105 +319,12 @@ export default class CallCard extends React.Component {
     }
   }
 
-  cameraDeviceSelectionChanged = async (event, item) => {
-    const cameras = await this.deviceManager.getCameras();
-    const cameraDeviceInfo = cameras.find((cameraDeviceInfo) => {
-      return cameraDeviceInfo.id === item.key;
-    });
-    const localVideoStream = this.call.localVideoStreams[0];
-    if (localVideoStream) {
-      localVideoStream.switchSource(cameraDeviceInfo);
-    }
-    this.setState({ selectedCameraDeviceId: cameraDeviceInfo.id });
-  };
-
-  speakerDeviceSelectionChanged = async (event, item) => {
-    const speakers = await this.deviceManager.getSpeakers();
-    const speakerDeviceInfo = speakers.find((speakerDeviceInfo) => {
-      return speakerDeviceInfo.id === item.key;
-    });
-    this.deviceManager.selectSpeaker(speakerDeviceInfo);
-    this.setState({ selectedSpeakerDeviceId: speakerDeviceInfo.id });
-  };
-
-  microphoneDeviceSelectionChanged = async (event, item) => {
-    const microphones = await this.deviceManager.getMicrophones();
-    const microphoneDeviceInfo = microphones.find((microphoneDeviceInfo) => {
-      return microphoneDeviceInfo.id === item.key;
-    });
-    this.deviceManager.selectMicrophone(microphoneDeviceInfo);
-    this.setState({ selectedMicrophoneDeviceId: microphoneDeviceInfo.id });
-  };
-
   render() {
     return (
       <div className="ms-Grid mt-2">
         <div className="ms-Grid-row">
-          {this.state.callMessage && (
-            <MessageBar
-              messageBarType={MessageBarType.warn}
-              isMultiline={true}
-              onDismiss={() => {
-                this.setState({ callMessage: undefined });
-              }}
-              dismissButtonAriaLabel="Close"
-            >
-              <b>{this.state.callMessage}</b>
-            </MessageBar>
-          )}
-        </div>
-        <div className="ms-Grid-row">
-          <div className="ms-Grid-col ms-lg6">
-            <h2>
-              {this.state.callState !== "Connected"
-                ? `${this.state.callState}...`
-                : `Connected`}
-            </h2>
-          </div>
-          <div className="ms-Grid-col ms-lg6 text-right">
-            {this.call && <h2>Call Id: {this.state.callId}</h2>}
-          </div>
-        </div>
-        <div className="ms-Grid-row">
           {this.state.callState === "Connected" && (
             <div className="ms-Grid-col ms-sm12 ms-lg12 ms-xl12 ms-xxl3">
-              <div className="participants-panel mt-1 mb-3">
-                {/* <Toggle
-                  label={
-                    <div>
-                      Dominant Speaker mode{" "}
-                      <TooltipHost
-                        content={`Render the most dominant speaker's video streams only or render all remote participant video streams`}
-                      >
-                        <Icon iconName="Info" aria-label="Info tooltip" />
-                      </TooltipHost>
-                    </div>
-                  }
-                  styles={{
-                    text: { color: "#edebe9" },
-                    label: { color: "#edebe9" },
-                  }}
-                  inlineLabel
-                  onText="On"
-                  offText="Off"
-                  onChange={() => {
-                    this.toggleDominantSpeakerMode();
-                  }}
-                />
-                {this.state.dominantSpeakerMode && (
-                  <div>
-                    Current dominant speaker:{" "}
-                    {this.state.dominantRemoteParticipant
-                      ? utils.getIdentifierText(
-                          this.state.dominantRemoteParticipant.identifier
-                        )
-                      : `None`}
-                  </div>
-                )} */}
-                {/* <div className="participants-panel-title custom-row text-center">
-                  <AddParticipantPopover call={this.call} />
-                </div> */}
-              </div>
               <div>
                 {this.state.showLocalVideo && (
                   <div className="mb-3">
@@ -501,182 +337,6 @@ export default class CallCard extends React.Component {
               </div>
             </div>
           )}
-          <div
-            className={
-              this.state.callState === "Connected"
-                ? `ms-Grid-col ms-sm12 ms-lg12 ms-xl12 ms-xxl9`
-                : "ms-Grid-col ms-sm12 ms-lg12 ms-xl12 ms-xxl12"
-            }
-          >
-            <div className="mb-2">
-              {this.state.callState !== "Connected" && (
-                <div className="custom-row">
-                  <div className="ringing-loader mb-4"></div>
-                </div>
-              )}
-              <div className="text-center">
-                {/* <span
-                  className="in-call-button"
-                  title={`Turn your video ${this.state.videoOn ? "off" : "on"}`}
-                  variant="secondary"
-                  onClick={() => this.handleVideoOnOff()}
-                >
-                  {this.state.videoOn && <Icon iconName="Video" />}
-                  {!this.state.videoOn && <Icon iconName="VideoOff" />}
-                </span> */}
-                {/* <span
-                  className="in-call-button"
-                  title={`${
-                    this.state.micMuted ? "Unmute" : "Mute"
-                  } your microphone`}
-                  variant="secondary"
-                  onClick={() => this.handleMicOnOff()}
-                >
-                  {this.state.micMuted && <Icon iconName="MicOff2" />}
-                  {!this.state.micMuted && <Icon iconName="Microphone" />}
-                </span> */}
-                {/* <span
-                  className="in-call-button"
-                  title={`${
-                    this.state.screenShareOn ? "Stop" : "Start"
-                  } sharing your screen`}
-                  variant="secondary"
-                  onClick={() => this.handleScreenSharingOnOff()}
-                >
-                  {!this.state.screenShareOn && <Icon iconName="TVMonitor" />}
-                  {this.state.screenShareOn && <Icon iconName="CircleStop" />}
-                </span> */}
-                {/* {(this.state.callState === "Connected" ||
-                  this.state.callState === "LocalHold" ||
-                  this.state.callState === "RemoteHold") && (
-                  <span
-                    className="in-call-button"
-                    title={`${
-                      this.state.callState === "LocalHold" ? "Unhold" : "Hold"
-                    } call`}
-                    variant="secondary"
-                    onClick={() => this.handleHoldUnhold()}
-                  >
-                    {this.state.callState === "LocalHold" && (
-                      <Icon iconName="Pause" />
-                    )}
-                    {(this.state.callState === "Connected" ||
-                      this.state.callState === "RemoteHold") && (
-                      <Icon iconName="Play" />
-                    )}
-                  </span>
-                )} */}
-                <span
-                  className="in-call-button"
-                  title="Settings"
-                  variant="secondary"
-                  onClick={() => this.setState({ showSettings: true })}
-                >
-                  <Icon iconName="Settings" />
-                </span>
-                <span
-                  className="in-call-button"
-                  onClick={() => this.call.hangUp()}
-                >
-                  <Icon iconName="DeclineCall" />
-                </span>
-                <Panel
-                  type={PanelType.medium}
-                  isLightDismiss
-                  isOpen={this.state.showSettings}
-                  onDismiss={() => this.setState({ showSettings: false })}
-                  closeButtonAriaLabel="Close"
-                  headerText="Settings"
-                >
-                  <div className="pl-2 mt-3">
-                    <h3>Video settings</h3>
-                    <div className="pl-2">
-                      <span>
-                        <h4>Camera preview</h4>
-                      </span>
-                      <DefaultButton
-                        onClick={() =>
-                          this.setState({
-                            showLocalVideo: !this.state.showLocalVideo,
-                          })
-                        }
-                      >
-                        Show/Hide
-                      </DefaultButton>
-                      {this.state.callState === "Connected" && (
-                        <Dropdown
-                          selectedKey={this.state.selectedCameraDeviceId}
-                          onChange={this.cameraDeviceSelectionChanged}
-                          label={"Camera"}
-                          options={this.state.cameraDeviceOptions}
-                          placeHolder={
-                            this.state.cameraDeviceOptions.length === 0
-                              ? "No camera devices found"
-                              : this.state.selectedCameraDeviceId
-                          }
-                          styles={{ dropdown: { width: 400 } }}
-                        />
-                      )}
-                    </div>
-                  </div>
-                  <div className="pl-2 mt-4">
-                    <h3>Sound Settings</h3>
-                    <div className="pl-2">
-                      {this.state.callState === "Connected" && (
-                        <Dropdown
-                          selectedKey={this.state.selectedSpeakerDeviceId}
-                          onChange={this.speakerDeviceSelectionChanged}
-                          options={this.state.speakerDeviceOptions}
-                          label={"Speaker"}
-                          placeHolder={
-                            this.state.speakerDeviceOptions.length === 0
-                              ? "No speaker devices found"
-                              : this.state.selectedSpeakerDeviceId
-                          }
-                          styles={{ dropdown: { width: 400 } }}
-                        />
-                      )}
-                      {this.state.callState === "Connected" && (
-                        <Dropdown
-                          selectedKey={this.state.selectedMicrophoneDeviceId}
-                          onChange={this.microphoneDeviceSelectionChanged}
-                          options={this.state.microphoneDeviceOptions}
-                          label={"Microphone"}
-                          placeHolder={
-                            this.state.microphoneDeviceOptions.length === 0
-                              ? "No microphone devices found"
-                              : this.state.selectedMicrophoneDeviceId
-                          }
-                          styles={{ dropdown: { width: 400 } }}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </Panel>
-              </div>
-            </div>
-            {
-              <div className="video-grid-row">
-                {(this.state.callState === "Connected" ||
-                  this.state.callState === "LocalHold" ||
-                  this.state.callState === "RemoteHold") &&
-                  this.state.allRemoteParticipantStreams.map((v) => (
-                    <StreamRenderer
-                      key={`${utils.getIdentifierText(
-                        v.participant.identifier
-                      )}-${v.stream.mediaStreamType}-${v.stream.id}`}
-                      ref={v.streamRendererComponentRef}
-                      stream={v.stream}
-                      remoteParticipant={v.participant}
-                      dominantSpeakerMode={this.state.dominantSpeakerMode}
-                      dominantRemoteParticipant={
-                        this.state.dominantRemoteParticipant
-                      }
-                    />
-                  ))}
-              </div>
-            }
-          </div>
         </div>
       </div>
     );

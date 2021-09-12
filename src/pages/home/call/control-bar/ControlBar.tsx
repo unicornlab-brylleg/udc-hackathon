@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { cardStyle } from "../../../shared/styles";
-import { Text } from "@fluentui/react/lib/Text";
 import { Stack } from "@fluentui/react/lib/Stack";
 import { IconButton } from "@fluentui/react/lib/components/Button";
 import {
@@ -88,7 +87,7 @@ const ControlBar = ({
 
   return (
     <div style={cardStyle}>
-      <Stack horizontal>
+      <Stack horizontal tokens={{ childrenGap: 8 }}>
         <IconButton
           iconProps={{ iconName: isVideoOn ? "Video" : "VideoOff" }}
           onClick={handleVideoOnOff}

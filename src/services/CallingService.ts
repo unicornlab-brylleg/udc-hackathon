@@ -7,7 +7,6 @@ import {
 } from "@azure/communication-calling";
 import { AzureCommunicationTokenCredential } from "@azure/communication-common";
 import React from "react";
-import { utils } from "../pages/home/call/Utils";
 
 // Extend global window type to add callAgent property to satisfy TS
 declare global {
@@ -19,6 +18,12 @@ declare global {
 type CallManager = {
   callClient: CallClient;
   callAgent: CallAgent;
+};
+
+type ParticipantStream = {
+  stream: RemoteVideoStream;
+  participant: RemoteParticipant;
+  streamRendererComponentRef: React.RefObject<any>;
 };
 
 class CallingService {
@@ -68,10 +73,10 @@ class CallingService {
 
   // Subscribe to remote participant's video stream
   subscribeToRemoteParticipant(
-    participant: any,
+    participant: RemoteParticipant,
     remoteParticipants: RemoteParticipant[],
     setRemoteParticipants: Function,
-    remoteParticipantStreams: any,
+    remoteParticipantStreams: ParticipantStream[],
     setRemoteParticipantStreams: Function
   ) {
     if (
@@ -85,7 +90,7 @@ class CallingService {
     }
 
     const addToListOfAllRemoteParticipantStreams = (
-      participantStreams: RemoteVideoStream[]
+      participantStreams: readonly RemoteVideoStream[]
     ) => {
       if (participantStreams) {
         let participantStreamTuples = participantStreams.map((stream) => {
@@ -141,7 +146,7 @@ class CallingService {
     call: Call,
     remoteParticipants: RemoteParticipant[],
     setRemoteParticipants: Function,
-    remoteParticipantStreams: any,
+    remoteParticipantStreams: ParticipantStream[],
     setRemoteParticipantStreams: Function
   ) {
     console.log("Attaching participants listener...");
@@ -176,5 +181,5 @@ class CallingService {
   }
 }
 
-export type { CallManager };
+export type { CallManager, ParticipantStream };
 export default CallingService;
