@@ -7,6 +7,7 @@ import { Spinner, SpinnerSize } from "@fluentui/react/lib/Spinner";
 import { PrimaryButton } from "@fluentui/react/lib/components/Button";
 import { CallManager } from "../../../services/CallingService";
 import DeviceService from "../../../services/DeviceService";
+import { mainCardStyle } from "../../shared/styles";
 
 type LobbyPageProps = {
   user: User;
@@ -28,13 +29,15 @@ const LobbyPage = ({ user, callManager, setDeviceOptions }: LobbyPageProps) => {
     // Field validation
     if (groupCallID && groupCallID.trim() !== "") {
       setIsLoading(true);
-      // Get call and device options options
-      const deviceManager = await callManager.callClient.getDeviceManager();
+      // [1] Get call and device options options
+      const deviceManager = await deviceService.retrieveDeviceManager(
+        callManager.callClient
+      );
       const [callOptions, deviceOptions] =
         await deviceService.getCallAndDeviceOptions(true, deviceManager);
       setDeviceOptions(deviceOptions);
       // setDeviceOptions(deviceOptions);
-      // Join group call
+      // [2] Join group call
       callManager.callAgent.join({ groupId: groupCallID }, callOptions);
       setIsLoading(false);
     } else setfieldErrorMessage("Please enter a group ID!");
@@ -51,13 +54,7 @@ const LobbyPage = ({ user, callManager, setDeviceOptions }: LobbyPageProps) => {
       }}
     >
       {/* Center Card */}
-      <div
-        style={{
-          border: "1px solid black",
-          boxShadow: "0px 0px 10px #959da5",
-          padding: 32,
-        }}
-      >
+      <div style={mainCardStyle}>
         <Stack
           tokens={{ childrenGap: 20 }}
           style={{ alignItems: "center", justifyItems: "center" }}

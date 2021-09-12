@@ -141,6 +141,9 @@ class DeviceService {
 
     return [callOptions, deviceOptions];
   }
+
+  // Attach listener to listen whenever video devices are updated
+  async attachVideoDeviceUpdateListener() {}
 }
 
 export type { CallOptions, DeviceOptions };

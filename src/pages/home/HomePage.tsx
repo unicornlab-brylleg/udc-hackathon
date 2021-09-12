@@ -30,24 +30,24 @@ const HomePage = ({ user }: HomePageProps) => {
   useEffect(() => {
     // Initialize call service
     async function initializeCallService() {
-      // Setup call manager
+      // [1] Setup call manager to be able to make and receive calls
       const callManagerTemp = await callingService.createAndSetupCallManager(
         user.token,
         `${user.firstName} ${user.lastName}`
       );
       setCallManager(callManagerTemp);
-      // Attach call listener
+      // [2] Attach call listener to be able to listen to call events
       await callingService.attachCallListener(
         callManagerTemp.callAgent,
         setCall
       );
-      // Retrieve device manager
+      // [3] Retrieve device manager to be able to manage devices
       const deviceManagerTemp = await deviceService.retrieveDeviceManager(
         callManagerTemp.callClient
       );
       setDeviceManager(deviceManagerTemp);
     }
-    if (!callManager) initializeCallService();
+    if (!callManager) initializeCallService(); // only initialize call service if not yet done so
     // TODO: Clean up call service
     // return () => {
     //   callingService.detachCallListener(callManager!.callAgent);

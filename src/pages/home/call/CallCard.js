@@ -8,7 +8,7 @@ import { Toggle } from "@fluentui/react/lib/Toggle";
 import { TooltipHost } from "@fluentui/react/lib/Tooltip";
 import StreamRenderer from "./StreamRenderer";
 import AddParticipantPopover from "./AddParticipantPopover";
-import RemoteParticipantCard from "./RemoteParticipantCard";
+import RemoteParticipantCard from "./side-pane/RemoteParticipantCard";
 import { Panel, PanelType } from "office-ui-fabric-react/lib/Panel";
 import { Icon } from "@fluentui/react/lib/Icon";
 import LocalVideoPreviewCard from "./LocalVideoPreviewCard";
@@ -226,42 +226,6 @@ export default class CallCard extends React.Component {
       this.call.remoteParticipants.forEach((rp) =>
         this.subscribeToRemoteParticipant(rp)
       );
-      this.call.on("remoteParticipantsUpdated", (e) => {
-        console.log(
-          `Call=${this.call.callId}, remoteParticipantsUpdated, added=${e.added}, removed=${e.removed}`
-        );
-        e.added.forEach((p) => {
-          console.log("participantAdded", p);
-          this.subscribeToRemoteParticipant(p);
-        });
-        e.removed.forEach((p) => {
-          console.log("participantRemoved", p);
-          if (p.callEndReason) {
-            this.setState((prevState) => ({
-              callMessage: `${
-                prevState.callMessage ? prevState.callMessage + `\n` : ``
-              }
-                                        Remote participant ${utils.getIdentifierText(
-                                          p.identifier
-                                        )} disconnected: code: ${
-                p.callEndReason.code
-              }, subCode: ${p.callEndReason.subCode}.`,
-            }));
-          }
-          this.setState({
-            remoteParticipants: this.state.remoteParticipants.filter(
-              (remoteParticipant) => {
-                return remoteParticipant !== p;
-              }
-            ),
-          });
-          this.setState({
-            streams: this.state.allRemoteParticipantStreams.filter((s) => {
-              return s.participant !== p;
-            }),
-          });
-        });
-      });
 
       const dominantSpeakersChangedHandler = async () => {
         try {
@@ -346,84 +310,6 @@ export default class CallCard extends React.Component {
         .api(Features.DominantSpeakers)
         .on("dominantSpeakersChanged", dominantSpeakersChangedHandler);
     }
-  }
-
-  subscribeToRemoteParticipant(participant) {
-    if (
-      !this.state.remoteParticipants.find((p) => {
-        return p === participant;
-      })
-    ) {
-      this.setState((prevState) => ({
-        remoteParticipants: [...prevState.remoteParticipants, participant],
-      }));
-    }
-
-    participant.on("displayNameChanged", () => {
-      console.log("displayNameChanged ", participant.displayName);
-    });
-
-    participant.on("stateChanged", () => {
-      console.log(
-        "Participant state changed",
-        participant.identifier.communicationUserId,
-        participant.state
-      );
-    });
-
-    const addToListOfAllRemoteParticipantStreams = (participantStreams) => {
-      if (participantStreams) {
-        let participantStreamTuples = participantStreams.map((stream) => {
-          return {
-            stream,
-            participant,
-            streamRendererComponentRef: React.createRef(),
-          };
-        });
-        participantStreamTuples.forEach((participantStreamTuple) => {
-          if (
-            !this.state.allRemoteParticipantStreams.find((v) => {
-              return v === participantStreamTuple;
-            })
-          ) {
-            this.setState((prevState) => ({
-              allRemoteParticipantStreams: [
-                ...prevState.allRemoteParticipantStreams,
-                participantStreamTuple,
-              ],
-            }));
-          }
-        });
-      }
-    };
-
-    const removeFromListOfAllRemoteParticipantStreams = (
-      participantStreams
-    ) => {
-      participantStreams.forEach((streamToRemove) => {
-        const tupleToRemove = this.state.allRemoteParticipantStreams.find(
-          (v) => {
-            return v.stream === streamToRemove;
-          }
-        );
-        if (tupleToRemove) {
-          this.setState({
-            allRemoteParticipantStreams:
-              this.state.allRemoteParticipantStreams.filter((streamTuple) => {
-                return streamTuple !== tupleToRemove;
-              }),
-          });
-        }
-      });
-    };
-
-    const handleVideoStreamsUpdated = (e) => {
-      addToListOfAllRemoteParticipantStreams(e.added);
-      removeFromListOfAllRemoteParticipantStreams(e.removed);
-    };
-
-    addToListOfAllRemoteParticipantStreams(participant.videoStreams);
-    participant.on("videoStreamsUpdated", handleVideoStreamsUpdated);
   }
 
   async handleVideoOnOff() {
@@ -641,7 +527,7 @@ export default class CallCard extends React.Component {
           {this.state.callState === "Connected" && (
             <div className="ms-Grid-col ms-sm12 ms-lg12 ms-xl12 ms-xxl3">
               <div className="participants-panel mt-1 mb-3">
-                <Toggle
+                {/* <Toggle
                   label={
                     <div>
                       Dominant Speaker mode{" "}
@@ -672,26 +558,10 @@ export default class CallCard extends React.Component {
                         )
                       : `None`}
                   </div>
-                )}
-                <div className="participants-panel-title custom-row text-center">
+                )} */}
+                {/* <div className="participants-panel-title custom-row text-center">
                   <AddParticipantPopover call={this.call} />
-                </div>
-                {this.state.remoteParticipants.length === 0 && (
-                  <p className="text-center">
-                    No other participants currently in the call
-                  </p>
-                )}
-                <ul className="participants-panel-list">
-                  {this.state.remoteParticipants.map((remoteParticipant) => (
-                    <RemoteParticipantCard
-                      key={`${utils.getIdentifierText(
-                        remoteParticipant.identifier
-                      )}`}
-                      remoteParticipant={remoteParticipant}
-                      call={this.call}
-                    />
-                  ))}
-                </ul>
+                </div> */}
               </div>
               <div>
                 {this.state.showLocalVideo && (
