@@ -1,28 +1,23 @@
 import React, { useState } from "react";
 import { Text } from "@fluentui/react/lib/Text";
-import { User } from "../../services/AuthenticationService";
+import { User } from "../../../services/AuthenticationService";
 import { Stack } from "@fluentui/react/lib/components/Stack/Stack";
 import { TextField } from "@fluentui/react/lib/components/TextField/TextField";
 import { Spinner, SpinnerSize } from "@fluentui/react/lib/Spinner";
 import { PrimaryButton } from "@fluentui/react/lib/components/Button";
-import CallingService, {
-  CallManager,
-  DeviceOptions,
-} from "../../services/CallingService";
+import CallingService, { CallManager } from "../../../services/CallingService";
 
 type LobbyPageProps = {
   user: User;
   callManager: CallManager;
+  setDeviceOptions: Function;
 };
 
-const LobbyPage = ({ user, callManager }: LobbyPageProps) => {
-  // States
+const LobbyPage = ({ user, callManager, setDeviceOptions }: LobbyPageProps) => {
+  // Local States
   const [groupCallID, setGroupCallID] = useState("");
   const [fieldErrorMessage, setfieldErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  // const [deviceOptions, setDeviceOptions] = useState<DeviceOptions | null>(
-  //   null
-  // );
 
   // Services
   const callingService = new CallingService();
@@ -32,12 +27,11 @@ const LobbyPage = ({ user, callManager }: LobbyPageProps) => {
     // Field validation
     if (groupCallID && groupCallID.trim() !== "") {
       setIsLoading(true);
-      // Get call options
+      // Get call and device options options
       const deviceManager = await callManager.callClient.getDeviceManager();
-      const [callOptions, deviceOptions] = await callingService.getCallOptions(
-        true,
-        deviceManager
-      );
+      const [callOptions, deviceOptions] =
+        await callingService.getCallAndDeviceOptions(true, deviceManager);
+      setDeviceOptions(deviceOptions);
       // setDeviceOptions(deviceOptions);
       // Join group call
       callManager.callAgent.join({ groupId: groupCallID }, callOptions);

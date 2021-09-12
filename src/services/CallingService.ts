@@ -80,6 +80,10 @@ class CallingService {
     });
     console.log("Success attaching call listener!");
   }
+  // Retrieve device manager
+  async retrieveDeviceManager(callClient: CallClient): Promise<DeviceManager> {
+    return await callClient.getDeviceManager();
+  }
   // Detach call listener
   async detachCallListener(callAgent: CallAgent) {
     console.warn("detachCallListener() not implemented!");
@@ -93,7 +97,7 @@ class CallingService {
     await deviceManager.askDevicePermission({ audio: true, video: true });
   }
   // Get call options
-  async getCallOptions(
+  async getCallAndDeviceOptions(
     withVideo: boolean,
     deviceManager: DeviceManager
   ): Promise<[CallOptions, DeviceOptions]> {

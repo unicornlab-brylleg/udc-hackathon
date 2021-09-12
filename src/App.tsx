@@ -5,8 +5,8 @@ import { User } from "./services/AuthenticationService";
 // import Home from "./pages/home/Home";
 
 function App() {
-  // App maintains the global User state
-  const [user, setUser] = useState<User | null>(null);
+  // Shared states
+  const [user, setUser] = useState<User | null>(null); // Determines whether to render Auth or Home page
 
   return (
     <>

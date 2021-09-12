@@ -13,7 +13,7 @@ type AuthenticationPageProps = {
 };
 
 const AuthenticationPage = ({ setUser }: AuthenticationPageProps) => {
-  // States
+  // Local States
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [fieldErrorMessage, setfieldErrorMessage] = useState("");
@@ -47,6 +47,7 @@ const AuthenticationPage = ({ setUser }: AuthenticationPageProps) => {
     } else setfieldErrorMessage("Please enter your full name!");
   }
 
+  // UI
   return (
     // Background
     <div
