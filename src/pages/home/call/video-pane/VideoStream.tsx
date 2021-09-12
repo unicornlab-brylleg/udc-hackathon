@@ -43,6 +43,7 @@ const VideoStream = ({
         }
       });
 
+      // Attach listener to determine whether there are any changes to the remote video stream
       remoteVideoStream.on("isAvailableChanged", async () => {
         try {
           // if (
@@ -87,9 +88,6 @@ const VideoStream = ({
       } catch (e) {
         console.error(e);
       }
-      // return () => {
-      //   cleanup;
-      // };
     }
     setupVideoStream();
     // eslint-disable-next-line react-hooks/exhaustive-deps
