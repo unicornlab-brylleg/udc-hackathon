@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { cardStyle } from "../../../shared/styles";
 import { Stack } from "@fluentui/react/lib/Stack";
 import { IconButton } from "@fluentui/react/lib/components/Button";
@@ -13,6 +13,8 @@ type ControlBarProps = {
   deviceManager: DeviceManager;
   selectedCameraID: string;
   setSelectedCameraID: Function;
+  isMicOnInitially: boolean;
+  isCamOnInitially: boolean;
 };
 
 const ControlBar = ({
@@ -20,14 +22,28 @@ const ControlBar = ({
   deviceManager,
   selectedCameraID,
   setSelectedCameraID,
+  isMicOnInitially,
+  isCamOnInitially,
 }: ControlBarProps) => {
   // Local States
   const [isVideoOn, setIsVideoOn] = useState(true);
-  const [isMicOn, setIsMicOn] = useState(true);
+  const [isMicOn, setIsMicOn] = useState(isMicOnInitially);
   const [isSharingScreen, setIsSharingScreen] = useState(false);
+
+  useEffect(() => {
+    async function onMount() {
+      // console.log(`isCamOnInitially: ${isCamOnInitially}`);
+      // if (!isCamOnInitially && call.localVideoStreams[0])
+      // call.stopVideo(call.localVideoStreams[0]);
+      console.log(`isMicOnInitially: ${isMicOnInitially}`);
+      if (!isMicOnInitially) call.mute();
+    }
+    onMount();
+  }, []); // Or [] if effect doesn't need props or state
 
   // Handle video on and off
   async function handleVideoOnOff() {
+    console.log(`Turning video ${isVideoOn}`);
     try {
       const cameras = await deviceManager.getCameras();
       const cameraDeviceInfo = cameras.find((cameraDeviceInfo) => {
@@ -54,6 +70,7 @@ const ControlBar = ({
 
   // Handle mic on and off
   async function handleMicOnOff() {
+    console.log(`Turning mic ${isMicOn}`);
     try {
       if (!call.isMuted) {
         await call.mute();

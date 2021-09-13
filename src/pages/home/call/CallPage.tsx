@@ -16,10 +16,18 @@ import VideoPane from "./video-pane/VideoPane";
 type CallPageProps = {
   call: Call;
   deviceManager: DeviceManager;
-  deviceOptions: DeviceOptions;
+  // deviceOptions: DeviceOptions;
+  isMicOnInitially: boolean;
+  isCamOnInitially: boolean;
 };
 
-const CallPage = ({ call, deviceManager, deviceOptions }: CallPageProps) => {
+const CallPage = ({
+  call,
+  deviceManager,
+  // deviceOptions,
+  isMicOnInitially,
+  isCamOnInitially,
+}: CallPageProps) => {
   // Shared states
   const [remoteParticipants, setRemoteParticipants] = useState<
     RemoteParticipant[]
@@ -102,6 +110,8 @@ const CallPage = ({ call, deviceManager, deviceOptions }: CallPageProps) => {
           deviceManager={deviceManager}
           selectedCameraID={selectedCameraID}
           setSelectedCameraID={setSelectedCameraID}
+          isMicOnInitially={isMicOnInitially}
+          isCamOnInitially={isCamOnInitially}
         />
         {/* Main Panel */}
         <Stack

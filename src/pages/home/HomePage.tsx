@@ -21,6 +21,8 @@ const HomePage = ({ user }: HomePageProps) => {
   const [deviceOptions, setDeviceOptions] = useState<DeviceOptions | null>(
     null
   ); // Contains data on device options for a call; set by Lobby Page upon joining a call
+  const [isMicOn, setIsMicOn] = useState(true); // whether mic is on, set by lobby page, consumed by call page
+  const [isCamOn, setIsCamOn] = useState(true); // whether cam is on, set by lobby page, consumed by call page
 
   // Services
   const callingService = new CallingService();
@@ -73,7 +75,9 @@ const HomePage = ({ user }: HomePageProps) => {
                 <CallPage
                   call={call}
                   deviceManager={deviceManager}
-                  deviceOptions={deviceOptions}
+                  // deviceOptions={deviceOptions}
+                  isMicOnInitially={isMicOn}
+                  isCamOnInitially={isCamOn}
                 />
               )}
             </>
@@ -82,6 +86,8 @@ const HomePage = ({ user }: HomePageProps) => {
               user={user}
               callManager={callManager}
               setDeviceOptions={setDeviceOptions}
+              setIsMicOn={setIsMicOn}
+              setIsCamOn={setIsCamOn}
             />
           )}
         </>
