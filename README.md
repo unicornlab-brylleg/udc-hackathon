@@ -1,3 +1,58 @@
+# UDC Hackathon
+
+### Functional Requirements
+
+- [x] Display video stream for at least 3 participants in a call
+- [x] Display name/info in video (like teams)
+- [x] Ability to configure on client side(as a config parameter) if participants enter session with their mic and camera enabled or disabled
+- [x] Notify users of their network quality from the client end (Call Health)
+- [ ] Dynamic layout to handle active speakers (should include –Adjust video tiles when participants turn off video.)
+- [ ] Chat functionality with status updates when users enter or leave the session
+- [x] Screen share
+
+### Issues
+
+- [x] Azure Communications Calling SDK → contains .api() method according to [docs](https://docs.microsoft.com/en-us/javascript/api/azure-communication-services/@azure/communication-calling/call?view=azure-communication-services-js) but not found in the actual SDK code
+- [ ] Video stream dispose → video not being disposed properly because renderer state variable still null (state management issue)
+- [ ] Joining session with camera on/off does not work (only mic configure does)
+- [ ] Chat functionality failing due to failure of createChatThread() due to Ret Error
+
+### References
+
+- General
+
+  [Azure Communication Services](https://docs.microsoft.com/en-us/azure/communication-services/)
+
+  [UI Library overview - An Azure Communication Services concept document](https://docs.microsoft.com/en-US/azure/communication-services/concepts/ui-library/ui-library-overview)
+
+- Setup
+
+  [Quickstart - Add video calling to your app (JavaScript) - An Azure Communication Services quickstart](https://docs.microsoft.com/en-us/azure/communication-services/quickstarts/voice-video-calling/get-started-with-video-calling?pivots=platform-web)
+
+  [Quickstart - Quickly create Azure Communication Services identities for testing - An Azure Communication Services quickstart](https://docs.microsoft.com/en-us/azure/communication-services/quickstarts/identity/quick-create-identity)
+
+  For quick generation of identities and access tokens
+
+- Configuration
+
+  [Quickstart - Create and manage resources in Azure Communication Services - An Azure Communication Services quickstart](https://docs.microsoft.com/en-us/azure/communication-services/quickstarts/create-communication-resource?pivots=platform-azp&tabs=windows)
+
+- Code Samples
+
+  - React Templates
+
+    [Group calling hero sample - An Azure Communication Services sample overview](https://docs.microsoft.com/en-us/azure/communication-services/samples/calling-hero-sample?pivots=platform-web)
+
+    [Group Chat Hero Sample - An Azure Communication Services sample overview](https://docs.microsoft.com/en-us/azure/communication-services/samples/chat-hero-sample)
+
+    [Azure Communication Services - Web calling sample - An Azure Communication Services sample](https://docs.microsoft.com/en-us/azure/communication-services/samples/web-calling-sample)
+
+  - Others
+
+- Other
+
+  [@azure/communication-react](https://www.npmjs.com/package/@azure/communication-react)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
