@@ -5,8 +5,11 @@ import { IconButton } from "@fluentui/react/lib/components/Button";
 import {
   Call,
   DeviceManager,
+  DiagnosticChangedEventArgs,
+  Features,
   LocalVideoStream,
 } from "@azure/communication-calling";
+import { Icon } from "@fluentui/react";
 
 type ControlBarProps = {
   call: Call;
@@ -16,6 +19,9 @@ type ControlBarProps = {
   isMicOnInitially: boolean;
   isCamOnInitially: boolean;
 };
+
+type NetworkQuality = "" | "Good" | "Poor" | "Bad";
+type NetworkQualityColor = "black" | "green" | "yellow" | "red";
 
 const ControlBar = ({
   call,
@@ -29,6 +35,7 @@ const ControlBar = ({
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(isMicOnInitially);
   const [isSharingScreen, setIsSharingScreen] = useState(false);
+  const [networkQuality, setNetworkQuality] = useState<NetworkQuality>("");
 
   useEffect(() => {
     async function onMount() {
@@ -37,6 +44,21 @@ const ControlBar = ({
       // call.stopVideo(call.localVideoStreams[0]);
       console.log(`isMicOnInitially: ${isMicOnInitially}`);
       if (!isMicOnInitially) call.mute();
+      // Attach listener to determine network quality
+      const networkQualityListener = (
+        diagnosticInfo: DiagnosticChangedEventArgs
+      ) => {
+        const networkQuality = diagnosticInfo.value.valueOf();
+        let networkQualityString: NetworkQuality;
+        if (networkQuality === 1) networkQualityString = "Good";
+        else if (networkQuality === 2) networkQualityString = "Poor";
+        else networkQualityString = "Bad";
+        console.log(`Network Quality: ${networkQualityString}`);
+        setNetworkQuality(networkQualityString);
+      };
+      call
+        .api(Features.Diagnostics)
+        .network.on("diagnosticChanged", networkQualityListener);
     }
     onMount();
   }, []); // Or [] if effect doesn't need props or state
@@ -102,6 +124,16 @@ const ControlBar = ({
     call.hangUp();
   }
 
+  // Get the color assigned to a specific network quality
+  function getNetworkQualityColor(
+    networkQuality: NetworkQuality
+  ): NetworkQualityColor {
+    if (networkQuality === "Good") return "green";
+    else if (networkQuality === "Poor") return "yellow";
+    else if (networkQuality === "Bad") return "red";
+    else return "black";
+  }
+
   return (
     <div style={cardStyle}>
       <Stack horizontal tokens={{ childrenGap: 8 }}>
@@ -125,6 +157,12 @@ const ControlBar = ({
           onClick={dropCall}
           style={{ color: "red" }}
         />
+        <Stack.Item align="center">
+          <Icon
+            iconName="NetworkTower"
+            style={{ color: getNetworkQualityColor(networkQuality) }}
+          />
+        </Stack.Item>
       </Stack>
     </div>
   );

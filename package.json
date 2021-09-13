@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@azure/communication-calling": "^1.1.0",
+    "@azure/communication-calling": "^1.2.1-beta.1",
     "@azure/communication-identity": "^1.0.0",
     "@fluentui/react": "^8.33.0",
     "@testing-library/jest-dom": "^5.14.1",
