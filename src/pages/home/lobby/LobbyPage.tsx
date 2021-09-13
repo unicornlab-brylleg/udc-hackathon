@@ -17,7 +17,9 @@ type LobbyPageProps = {
 
 const LobbyPage = ({ user, callManager, setDeviceOptions }: LobbyPageProps) => {
   // Local States
-  const [groupCallID, setGroupCallID] = useState("");
+  const [groupCallID, setGroupCallID] = useState(
+    "29228d3e-040e-4656-a70e-890ab4e173e5"
+  );
   const [fieldErrorMessage, setfieldErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -65,6 +67,7 @@ const LobbyPage = ({ user, callManager, setDeviceOptions }: LobbyPageProps) => {
           <TextField
             required
             label="Group Call ID"
+            value={groupCallID}
             onChange={(event, text) => setGroupCallID(text ?? "")}
             errorMessage={fieldErrorMessage}
           />
