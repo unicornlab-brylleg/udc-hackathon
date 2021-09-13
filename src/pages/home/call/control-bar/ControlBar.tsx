@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { cardStyle } from "../../../shared/styles";
 import { Stack } from "@fluentui/react/lib/Stack";
-import { IconButton } from "@fluentui/react/lib/components/Button";
+import {
+  DefaultButton,
+  IconButton,
+} from "@fluentui/react/lib/components/Button";
 import {
   Call,
   DeviceManager,
@@ -9,33 +12,51 @@ import {
   Features,
   LocalVideoStream,
 } from "@azure/communication-calling";
-import { Icon } from "@fluentui/react";
+import { Icon, TextField } from "@fluentui/react";
+import {
+  ChatClient,
+  ChatThreadClient,
+  CreateChatThreadOptions,
+} from "@azure/communication-chat";
+import {
+  AzureCommunicationTokenCredential,
+  CommunicationIdentifier,
+} from "@azure/communication-common";
+import { endpointUrl } from "../../../../services/config.json";
 
 type ControlBarProps = {
+  userToken: string;
   call: Call;
   deviceManager: DeviceManager;
   selectedCameraID: string;
   setSelectedCameraID: Function;
   isMicOnInitially: boolean;
   isCamOnInitially: boolean;
+  userIdentifierObj: CommunicationIdentifier;
 };
 
 type NetworkQuality = "" | "Good" | "Poor" | "Bad";
 type NetworkQualityColor = "black" | "green" | "yellow" | "red";
 
 const ControlBar = ({
+  userToken,
   call,
   deviceManager,
   selectedCameraID,
   setSelectedCameraID,
   isMicOnInitially,
   isCamOnInitially,
+  userIdentifierObj,
 }: ControlBarProps) => {
   // Local States
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(isMicOnInitially);
   const [isSharingScreen, setIsSharingScreen] = useState(false);
   const [networkQuality, setNetworkQuality] = useState<NetworkQuality>("");
+  const [chatMessage, setChatMessage] = useState("");
+  // Chat client (move reusable chat logic to ChatService)
+  const tokenCredential = new AzureCommunicationTokenCredential(userToken);
+  const chatClient = new ChatClient(endpointUrl, tokenCredential);
 
   useEffect(() => {
     async function onMount() {
@@ -59,6 +80,9 @@ const ControlBar = ({
       call
         .api(Features.Diagnostics)
         .network.on("diagnosticChanged", networkQualityListener);
+      // Create chat thread
+      await createChatThread();
+      await attachIncomingMessageListener();
     }
     onMount();
   }, []); // Or [] if effect doesn't need props or state
@@ -124,6 +148,71 @@ const ControlBar = ({
     call.hangUp();
   }
 
+  // Create chat thread
+  // ! Throws an error "Rest Error" in createChatThread() call
+  async function createChatThread() {
+    try {
+      const createChatThreadRequest = {
+        topic: "Hello, World!",
+      };
+      const createChatThreadOptions: CreateChatThreadOptions = {
+        participants: [
+          {
+            id: userIdentifierObj,
+            displayName: "<USER_DISPLAY_NAME>",
+          },
+        ],
+      };
+      console.log(`Creating chat thread with ${chatClient}`);
+      const createChatThreadResult = await chatClient.createChatThread(
+        createChatThreadRequest,
+        createChatThreadOptions
+      );
+      const threadId = createChatThreadResult.chatThread!.id;
+      console.log(`Chat created: ${threadId}`);
+    } catch (error) {
+      console.log(`Error creating chat thread: ${error}`);
+    }
+  }
+
+  // Get existing chat thread client
+  // ! Untested due to "Rest Error" in createChatThread() call
+  async function getChatThreadClient(threadID: string) {
+    await chatClient.getChatThreadClient(threadID);
+  }
+
+  // Send chat message
+  // ! Untested due to "Rest Error" in createChatThread() call
+  async function sendChatMessage() {
+    if (chatMessage && chatMessage !== "") {
+      console.log(`Chat Message: ${chatMessage}`);
+      const sendMessageRequest = {
+        content: chatMessage,
+      };
+      const sendMessageOptions = {
+        senderDisplayName: "Brylle",
+        type: "text",
+      };
+      const chatThreadClient = await chatClient.getChatThreadClient("ThreadID");
+      const sendChatMessageResult = await chatThreadClient.sendMessage(
+        sendMessageRequest,
+        sendMessageOptions
+      );
+      const messageId = sendChatMessageResult.id;
+      setChatMessage("");
+    }
+  }
+
+  // Listen to received chat messages
+  // ! Untested due to "Rest Error" in createChatThread() call
+  async function attachIncomingMessageListener() {
+    await chatClient.startRealtimeNotifications();
+    // subscribe to new notification
+    chatClient.on("chatMessageReceived", (e) => {
+      console.log(`Notification chatMessageReceived! ${e.sender} ${e.message}`);
+    });
+  }
+
   // Get the color assigned to a specific network quality
   function getNetworkQualityColor(
     networkQuality: NetworkQuality
@@ -163,6 +252,11 @@ const ControlBar = ({
             style={{ color: getNetworkQualityColor(networkQuality) }}
           />
         </Stack.Item>
+        <TextField
+          value={chatMessage}
+          onChange={(evt, value) => setChatMessage(value ?? "")}
+        />
+        <DefaultButton text="Send" onClick={sendChatMessage} />
       </Stack>
     </div>
   );

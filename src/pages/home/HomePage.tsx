@@ -73,6 +73,8 @@ const HomePage = ({ user }: HomePageProps) => {
                 <LoadingPage loadingMessage="Joining call..." />
               ) : (
                 <CallPage
+                  userIdentifierObj={user.identifierObj}
+                  userToken={user.token}
                   call={call}
                   deviceManager={deviceManager}
                   // deviceOptions={deviceOptions}

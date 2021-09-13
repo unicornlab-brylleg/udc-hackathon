@@ -12,21 +12,26 @@ import CallingService, {
 } from "../../../services/CallingService";
 import ControlBar from "./control-bar/ControlBar";
 import VideoPane from "./video-pane/VideoPane";
+import { CommunicationIdentifier } from "@azure/communication-common";
 
 type CallPageProps = {
+  userToken: string;
   call: Call;
   deviceManager: DeviceManager;
   // deviceOptions: DeviceOptions;
   isMicOnInitially: boolean;
   isCamOnInitially: boolean;
+  userIdentifierObj: CommunicationIdentifier;
 };
 
 const CallPage = ({
+  userToken,
   call,
   deviceManager,
   // deviceOptions,
   isMicOnInitially,
   isCamOnInitially,
+  userIdentifierObj,
 }: CallPageProps) => {
   // Shared states
   const [remoteParticipants, setRemoteParticipants] = useState<
@@ -106,6 +111,8 @@ const CallPage = ({
       >
         {/* Control Bar */}
         <ControlBar
+          userToken={userToken}
+          userIdentifierObj={userIdentifierObj}
           call={call}
           deviceManager={deviceManager}
           selectedCameraID={selectedCameraID}

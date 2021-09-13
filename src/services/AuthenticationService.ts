@@ -1,10 +1,12 @@
 import { CommunicationIdentityClient } from "@azure/communication-identity";
 import { connectionString } from "./config.json";
+import { CommunicationIdentifier } from "@azure/communication-common";
 
 type User = {
   firstName: string;
   lastName: string;
   id: string;
+  identifierObj: CommunicationIdentifier;
   token: string;
 };
 
@@ -32,6 +34,7 @@ class AuthenticationService {
       lastName: lastName,
       id: user.user.communicationUserId,
       token: user.token,
+      identifierObj: user.user,
     };
   }
 }
