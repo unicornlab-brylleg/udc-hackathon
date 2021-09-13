@@ -32,6 +32,10 @@
   [Quickstart - Quickly create Azure Communication Services identities for testing - An Azure Communication Services quickstart](https://docs.microsoft.com/en-us/azure/communication-services/quickstarts/identity/quick-create-identity)
 
   For quick generation of identities and access tokens
+  
+- UI
+
+  [FluentUI](https://developer.microsoft.com/en-us/fluentui)
 
 - Configuration
 
@@ -46,12 +50,11 @@
     [Group Chat Hero Sample - An Azure Communication Services sample overview](https://docs.microsoft.com/en-us/azure/communication-services/samples/chat-hero-sample)
 
     [Azure Communication Services - Web calling sample - An Azure Communication Services sample](https://docs.microsoft.com/en-us/azure/communication-services/samples/web-calling-sample)
+    
+- Docs
 
-  - Others
-
-- Other
-
-  [@azure/communication-react](https://www.npmjs.com/package/@azure/communication-react)
+  - ACS Docs
+  - [Call Diagnostics](https://techcommunity.microsoft.com/t5/azure-communication-services/introducing-azure-communication-services-call-diagnostics/ba-p/2557632)
 
 # Getting Started with Create React App
 
