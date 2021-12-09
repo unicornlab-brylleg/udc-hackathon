@@ -6,7 +6,7 @@ import { PrimaryButton } from "@fluentui/react";
 import { Spinner, SpinnerSize } from "@fluentui/react/lib/Spinner";
 import AuthenticationService, {
   User,
-} from "../../services/AuthenticationService";
+} from "../../services-old/AuthenticationService";
 import { mainCardStyle } from "../shared/styles";
 
 type AuthenticationPageProps = {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AuthenticationPage from "./pages/auth/AuthenticationPage";
 import HomePage from "./pages/home/HomePage";
-import { User } from "./services/AuthenticationService";
+import { User } from "./services-old/AuthenticationService";
 import { initializeIcons } from "@fluentui/react/lib/Icons";
 // import Home from "./pages/home/Home";
 

@@ -22,7 +22,7 @@ import {
   AzureCommunicationTokenCredential,
   CommunicationIdentifier,
 } from "@azure/communication-common";
-import { endpointUrl } from "../../../../services/config.json";
+import { endpointUrl } from "../../../../services-old/config.json";
 
 type ControlBarProps = {
   userToken: string;

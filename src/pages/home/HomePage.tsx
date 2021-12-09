@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { User } from "../../services/AuthenticationService";
-import CallingService, { CallManager } from "../../services/CallingService";
-import DeviceService, { DeviceOptions } from "../../services/DeviceService";
+import { User } from "../../services-old/AuthenticationService";
+import CallingService, { CallManager } from "../../services-old/CallingService";
+import DeviceService, { DeviceOptions } from "../../services-old/DeviceService";
 import LoadingPage from "../shared/LoadingPage";
 import CallPage from "./call/CallPage";
 import LobbyPage from "./lobby/LobbyPage";

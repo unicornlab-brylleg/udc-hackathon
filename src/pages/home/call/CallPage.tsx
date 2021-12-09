@@ -4,12 +4,12 @@ import {
   DeviceManager,
   RemoteParticipant,
 } from "@azure/communication-calling";
-import { DeviceOptions } from "../../../services/DeviceService";
+import { DeviceOptions } from "../../../services-old/DeviceService";
 import { Stack } from "@fluentui/react/lib/Stack";
 import SidePane from "./side-pane/SidePane";
 import CallingService, {
   ParticipantStream,
-} from "../../../services/CallingService";
+} from "../../../services-old/CallingService";
 import ControlBar from "./control-bar/ControlBar";
 import VideoPane from "./video-pane/VideoPane";
 import { CommunicationIdentifier } from "@azure/communication-common";

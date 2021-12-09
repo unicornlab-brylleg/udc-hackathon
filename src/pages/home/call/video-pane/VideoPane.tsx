@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { cardStyle } from "../../../shared/styles";
 import { utils } from "../Utils";
-import { ParticipantStream } from "../../../../services/CallingService";
+import { ParticipantStream } from "../../../../services-old/CallingService";
 import VideoStream from "./VideoStream";
 import { Call } from "@azure/communication-calling";
 

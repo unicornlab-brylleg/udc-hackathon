@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Text } from "@fluentui/react/lib/Text";
-import { User } from "../../../services/AuthenticationService";
+import { User } from "../../../services-old/AuthenticationService";
 import { Stack } from "@fluentui/react/lib/components/Stack/Stack";
 import { TextField } from "@fluentui/react/lib/components/TextField/TextField";
 import { Spinner, SpinnerSize } from "@fluentui/react/lib/Spinner";
 import { PrimaryButton } from "@fluentui/react/lib/components/Button";
-import { CallManager } from "../../../services/CallingService";
-import DeviceService from "../../../services/DeviceService";
+import { CallManager } from "../../../services-old/CallingService";
+import DeviceService from "../../../services-old/DeviceService";
 import { mainCardStyle } from "../../shared/styles";
 import { Icon } from "@fluentui/react/lib/components/Icon";
 import { Toggle } from "@fluentui/react/lib/components/Toggle";
