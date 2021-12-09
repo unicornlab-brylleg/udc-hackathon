@@ -183,25 +183,25 @@ const ControlBar = ({
 
   // Send chat message
   // ! Untested due to "Rest Error" in createChatThread() call
-  async function sendChatMessage() {
-    if (chatMessage && chatMessage !== "") {
-      console.log(`Chat Message: ${chatMessage}`);
-      const sendMessageRequest = {
-        content: chatMessage,
-      };
-      const sendMessageOptions = {
-        senderDisplayName: "Brylle",
-        type: "text",
-      };
-      const chatThreadClient = await chatClient.getChatThreadClient("ThreadID");
-      const sendChatMessageResult = await chatThreadClient.sendMessage(
-        sendMessageRequest,
-        sendMessageOptions
-      );
-      const messageId = sendChatMessageResult.id;
-      setChatMessage("");
-    }
-  }
+  // async function sendChatMessage() {
+  //   if (chatMessage && chatMessage !== "") {
+  //     console.log(`Chat Message: ${chatMessage}`);
+  //     const sendMessageRequest = {
+  //       content: chatMessage,
+  //     };
+  //     const sendMessageOptions = {
+  //       senderDisplayName: "Brylle",
+  //       type: "text",
+  //     };
+  //     const chatThreadClient = await chatClient.getChatThreadClient("ThreadID");
+  //     const sendChatMessageResult = await chatThreadClient.sendMessage(
+  //       sendMessageRequest,
+  //       sendMessageOptions
+  //     );
+  //     const messageId = sendChatMessageResult.id;
+  //     setChatMessage("");
+  //   }
+  // }
 
   // Listen to received chat messages
   // ! Untested due to "Rest Error" in createChatThread() call
@@ -256,7 +256,7 @@ const ControlBar = ({
           value={chatMessage}
           onChange={(evt, value) => setChatMessage(value ?? "")}
         />
-        <DefaultButton text="Send" onClick={sendChatMessage} />
+        {/* <DefaultButton text="Send" onClick={sendChatMessage} /> */}
       </Stack>
     </div>
   );

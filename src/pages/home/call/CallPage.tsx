@@ -59,16 +59,16 @@ const CallPage = ({
     }
     attachListeners();
     // Subscribe to remote participant streams
-    call.remoteParticipants.forEach((rp) =>
-      // this.subscribeToRemoteParticipant(rp)
-      callingService.subscribeToRemoteParticipant(
-        rp,
-        remoteParticipants,
-        setRemoteParticipants,
-        remoteParticipantStreams,
-        setRemoteParticipantStreams
-      )
-    );
+    // call.remoteParticipants.forEach((rp: RemoteParticipant) =>
+    //   // this.subscribeToRemoteParticipant(rp)
+    //   callingService.subscribeToRemoteParticipant(
+    //     rp,
+    //     remoteParticipants,
+    //     setRemoteParticipants,
+    //     remoteParticipantStreams,
+    //     setRemoteParticipantStreams
+    //   )
+    // );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Or [] if effect doesn't need props or state
 
