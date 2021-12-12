@@ -6,9 +6,10 @@ import LoadingPage from "../shared/LoadingPage";
 import CallPage from "./call/CallPage";
 import LobbyPage from "./lobby/LobbyPage";
 import { DeviceManager } from "@azure/communication-calling";
+import { ACSUser } from "../../services/AuthService";
 
 type HomePageProps = {
-  user: User;
+  user: ACSUser;
 };
 
 const HomePage = ({ user }: HomePageProps) => {
@@ -73,7 +74,7 @@ const HomePage = ({ user }: HomePageProps) => {
                 <LoadingPage loadingMessage="Joining call..." />
               ) : (
                 <CallPage
-                  userIdentifierObj={user.identifierObj}
+                  // userIdentifierObj={user.identifierObj}
                   userToken={user.token}
                   call={call}
                   deviceManager={deviceManager}

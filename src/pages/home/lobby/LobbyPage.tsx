@@ -10,9 +10,10 @@ import DeviceService from "../../../services-old/DeviceService";
 import { mainCardStyle } from "../../shared/styles";
 import { Icon } from "@fluentui/react/lib/components/Icon";
 import { Toggle } from "@fluentui/react/lib/components/Toggle";
+import { ACSUser } from "../../../services/AuthService";
 
 type LobbyPageProps = {
-  user: User;
+  user: ACSUser;
   callManager: CallManager;
   setDeviceOptions: Function;
   setIsMicOn: Function;

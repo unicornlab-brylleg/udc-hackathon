@@ -1,4 +1,4 @@
 {
-  "connectionString": "endpoint=https://acs_3.communication.azure.com/;accesskey=yy1kgmhA1zkNa5I9/aD6MGRRFwHMl1zABUIy5SJI45dZPlcqDw9ejSUfXnCyFjbxHQsOwy2oY+T+JhY/N76LHQ==",
-  "endpointUrl": "https://acs_3.communication.azure.com/"
+  "connectionString": "endpoint=https://udc-poc-acs.communication.azure.com/;accesskey=moqCd3VFS7hjZxZ0ELtbl7t3Im8PShAOglpuqrpkfNwf8f32jLcQHmk0Ila3fqZsL7i3fdXNqKrkVyUVE6y3bA==",
+  "endpointUrl": "https://udc-poc-acs.communication.azure.com/"
 }

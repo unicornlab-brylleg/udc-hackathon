@@ -21,7 +21,7 @@ type CallPageProps = {
   // deviceOptions: DeviceOptions;
   isMicOnInitially: boolean;
   isCamOnInitially: boolean;
-  userIdentifierObj: CommunicationIdentifier;
+  // userIdentifierObj: CommunicationIdentifier;
 };
 
 const CallPage = ({
@@ -31,7 +31,7 @@ const CallPage = ({
   // deviceOptions,
   isMicOnInitially,
   isCamOnInitially,
-  userIdentifierObj,
+  // userIdentifierObj,
 }: CallPageProps) => {
   // Shared states
   const [remoteParticipants, setRemoteParticipants] = useState<
@@ -112,7 +112,7 @@ const CallPage = ({
         {/* Control Bar */}
         <ControlBar
           userToken={userToken}
-          userIdentifierObj={userIdentifierObj}
+          // userIdentifierObj={userIdentifierObj}
           call={call}
           deviceManager={deviceManager}
           selectedCameraID={selectedCameraID}

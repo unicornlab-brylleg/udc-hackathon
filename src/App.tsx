@@ -3,25 +3,31 @@ import AuthenticationPage from "./pages/auth/AuthenticationPage";
 import HomePage from "./pages/home/HomePage";
 import { User } from "./services-old/AuthenticationService";
 import { initializeIcons } from "@fluentui/react/lib/Icons";
+import authManager from "./manager/AuthManager";
+import {observer} from 'mobx-react-lite';
 // import Home from "./pages/home/Home";
 
 function App() {
-  // Shared states
-  const [user, setUser] = useState<User | null>(null); // Determines whether to render Auth or Home page
+
+  const { user } = authManager;
 
   useEffect(() => {
     initializeIcons();
   }, []);
+
+  useEffect(() => {
+    console.log('user changed!', user?.token)
+  }, [user]);
 
   return (
     <>
       {user ? (
         <HomePage user={user} />
       ) : (
-        <AuthenticationPage setUser={setUser} />
+        <AuthenticationPage />
       )}
     </>
   );
 }
 
-export default App;
+export default observer(App);

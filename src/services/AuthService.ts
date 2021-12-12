@@ -1,16 +1,29 @@
-// interface RandomData {
-//   id: number;
-//   title: string;
-//   price: number;
-// }
+import { CommunicationIdentityClient } from "@azure/communication-identity";
+import { connectionString } from "./config.json";
 
-class AuthService {
-  // static async requestData(): Promise<RandomData[]> {
-  //   const response = await http.get('https://fakestoreapi.com/products');
-  //   const responseData = response.data as RandomData[];
-  //   return responseData;
-  // }
+interface ACSUser {
+  firstName: string;
+  lastName: string;
+  token: string;
 }
 
-// export type { RandomData };
+class AuthService {
+  static async fetchUserInfo(): Promise<ACSUser> {
+    const communicationIdentityClient = new CommunicationIdentityClient(
+      connectionString
+    );
+    const user = await communicationIdentityClient.createUserAndToken([
+      "voip",
+    ]);
+    const fetchedFirstName = 'John'; // replace with first name fetched from server
+    const fetchedLastName = 'Doe'; // replace with last name fetched from server
+    return {
+      firstName: fetchedFirstName,
+      lastName: fetchedLastName,
+      token: user.token
+    }
+  }
+}
+
+export type { ACSUser };
 export default AuthService;

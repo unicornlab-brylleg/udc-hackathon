@@ -32,7 +32,7 @@ type ControlBarProps = {
   setSelectedCameraID: Function;
   isMicOnInitially: boolean;
   isCamOnInitially: boolean;
-  userIdentifierObj: CommunicationIdentifier;
+  // userIdentifierObj: CommunicationIdentifier;
 };
 
 type NetworkQuality = "" | "Good" | "Poor" | "Bad";
@@ -46,7 +46,7 @@ const ControlBar = ({
   setSelectedCameraID,
   isMicOnInitially,
   isCamOnInitially,
-  userIdentifierObj,
+  // userIdentifierObj,
 }: ControlBarProps) => {
   // Local States
   const [isVideoOn, setIsVideoOn] = useState(true);
@@ -81,8 +81,8 @@ const ControlBar = ({
         .api(Features.Diagnostics)
         .network.on("diagnosticChanged", networkQualityListener);
       // Create chat thread
-      await createChatThread();
-      await attachIncomingMessageListener();
+      // await createChatThread();
+      // await attachIncomingMessageListener();
     }
     onMount();
   }, []); // Or [] if effect doesn't need props or state
@@ -149,31 +149,31 @@ const ControlBar = ({
   }
 
   // Create chat thread
-  // ! Throws an error "Rest Error" in createChatThread() call
-  async function createChatThread() {
-    try {
-      const createChatThreadRequest = {
-        topic: "Hello, World!",
-      };
-      const createChatThreadOptions: CreateChatThreadOptions = {
-        participants: [
-          {
-            id: userIdentifierObj,
-            displayName: "<USER_DISPLAY_NAME>",
-          },
-        ],
-      };
-      console.log(`Creating chat thread with ${chatClient}`);
-      const createChatThreadResult = await chatClient.createChatThread(
-        createChatThreadRequest,
-        createChatThreadOptions
-      );
-      const threadId = createChatThreadResult.chatThread!.id;
-      console.log(`Chat created: ${threadId}`);
-    } catch (error) {
-      console.log(`Error creating chat thread: ${error}`);
-    }
-  }
+  // // ! Throws an error "Rest Error" in createChatThread() call
+  // async function createChatThread() {
+  //   try {
+  //     const createChatThreadRequest = {
+  //       topic: "Hello, World!",
+  //     };
+  //     const createChatThreadOptions: CreateChatThreadOptions = {
+  //       participants: [
+  //         {
+  //           id: userIdentifierObj,
+  //           displayName: "<USER_DISPLAY_NAME>",
+  //         },
+  //       ],
+  //     };
+  //     console.log(`Creating chat thread with ${chatClient}`);
+  //     const createChatThreadResult = await chatClient.createChatThread(
+  //       createChatThreadRequest,
+  //       createChatThreadOptions
+  //     );
+  //     const threadId = createChatThreadResult.chatThread!.id;
+  //     console.log(`Chat created: ${threadId}`);
+  //   } catch (error) {
+  //     console.log(`Error creating chat thread: ${error}`);
+  //   }
+  // }
 
   // Get existing chat thread client
   // ! Untested due to "Rest Error" in createChatThread() call
